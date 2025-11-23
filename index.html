@@ -3,284 +3,1220 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Plataforma de Mecanografía - Liquid Glass</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>TypeMaster Pro - Plataforma de Mecanografía Profesional</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <style>
-      * {
-        font-family: "Inter", sans-serif;
-      }
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
 
-      body {
-        background: linear-gradient(
-          135deg,
-          #667eea 0%,
-          #764ba2 50%,
-          #f093fb 100%
-        );
-        min-height: 100vh;
-      }
+    <!-- Chart.js para gráficas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-      /* Efecto Liquid Glass */
-      .glass {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      }
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-      .glass-dark {
-        background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-      /* Caracteres de práctica */
-      .char-correct {
-        color: #10b981;
-        font-weight: 600;
-      }
-
-      .char-error {
-        color: #ef4444;
-        background-color: rgba(239, 68, 68, 0.2);
-        font-weight: 600;
-      }
-
-      .char-pending {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      /* Animaciones suaves */
-      .fade-in {
-        animation: fadeIn 0.5s ease-in;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Botones con efecto hover */
-      .btn-glass {
-        transition: all 0.3s ease;
-      }
-
-      .btn-glass:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
-      }
-
-      /* Input focus con glow */
-      input:focus,
-      textarea:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-      }
-
-      /* Scrollbar personalizada */
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 10px;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.5);
-      }
-    </style>
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="p-4 md:p-8">
-    <!-- Contenedor Principal -->
-    <div class="max-w-7xl mx-auto">
-      <!-- Header -->
-      <header class="glass rounded-3xl p-6 mb-6 fade-in">
-        <h1 class="text-4xl md:text-5xl font-bold text-white text-center mb-2">
-          ⌨️ Mecanografía Pro
-        </h1>
-        <p class="text-white/80 text-center text-lg">
-          Practica y mejora tu velocidad de escritura
-        </p>
-      </header>
-
-      <!-- Navegación entre secciones -->
-      <nav class="glass rounded-3xl p-2 mb-6 fade-in flex gap-2">
-        <button
-          id="btn-practica"
-          class="flex-1 py-4 rounded-2xl text-white font-semibold transition-all duration-300 bg-white/20"
-        >
-          🎯 Zona de Práctica
-        </button>
-        <button
-          id="btn-admin"
-          class="flex-1 py-4 rounded-2xl text-white font-semibold transition-all duration-300 hover:bg-white/10"
-        >
-          ⚙️ Panel Admin
-        </button>
-      </nav>
-
-      <!-- SECCIÓN 1: ZONA DE PRÁCTICA -->
-      <section id="seccion-practica" class="fade-in">
-        <div class="glass rounded-3xl p-8 mb-6">
-          <!-- Estadísticas en tiempo real -->
-          <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="glass-dark rounded-2xl p-4 text-center">
-              <div class="text-white/60 text-sm mb-1">WPM</div>
-              <div id="stat-wpm" class="text-3xl font-bold text-white">0</div>
+  <body class="min-h-screen overflow-x-hidden">
+    <div class="flex min-h-screen">
+      <!-- ===================================
+             SIDEBAR DE NAVEGACIÓN
+             =================================== -->
+      <aside
+        class="glass fixed left-0 top-0 z-50 h-screen w-72 p-8 border-r border-white/20"
+      >
+        <div class="mb-12">
+          <div class="flex items-center gap-3 text-white text-2xl font-bold">
+            <div
+              class="w-10 h-10 rounded-xl flex items-center justify-center"
+              style="background: #ffefb3; color: #013e37"
+            >
+              <i data-feather="zap"></i>
             </div>
-            <div class="glass-dark rounded-2xl p-4 text-center">
-              <div class="text-white/60 text-sm mb-1">Precisión</div>
-              <div id="stat-precision" class="text-3xl font-bold text-white">
-                100%
+            <span>TypeMaster</span>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="space-y-2">
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="dashboard"
+              >
+                <i data-feather="home" class="w-5 h-5"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="practice"
+              >
+                <i data-feather="edit-3" class="w-5 h-5"></i>
+                <span>Zona de Práctica</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="custom-practice"
+              >
+                <i data-feather="target" class="w-5 h-5"></i>
+                <span>Práctica Personalizada</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="history"
+              >
+                <i data-feather="bar-chart-2" class="w-5 h-5"></i>
+                <span>Historial y Estadísticas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="admin"
+              >
+                <i data-feather="database" class="w-5 h-5"></i>
+                <span>Gestión de Textos</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="analysis"
+              >
+                <i data-feather="activity" class="w-5 h-5"></i>
+                <span>Análisis de Errores</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="nav-link flex items-center gap-3 px-4 py-3 text-white/80 no-underline rounded-xl font-medium cursor-pointer hover:bg-white/10 hover:text-white"
+                data-view="settings"
+              >
+                <i data-feather="settings" class="w-5 h-5"></i>
+                <span>Configuración</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- ===================================
+             CONTENIDO PRINCIPAL
+             =================================== -->
+      <main class="flex-1 ml-72 p-8">
+        <!-- ===================================
+                 VISTA: DASHBOARD
+                 =================================== -->
+        <section id="view-dashboard" class="view-section active">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="zap"></i>
+            Bienvenido a TypeMaster Pro
+          </h1>
+
+          <!-- Estadísticas Generales -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+          >
+            <div
+              class="glass rounded-3xl p-8 text-center hover:-translate-y-1 transition-transform"
+            >
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="dashboard-total-practices"
+              >
+                0
+              </div>
+              <div
+                class="text-white/70 text-sm uppercase tracking-wide flex items-center justify-center gap-2"
+              >
+                <i data-feather="edit" class="w-4 h-4"></i>
+                Prácticas Realizadas
               </div>
             </div>
-            <div class="glass-dark rounded-2xl p-4 text-center">
-              <div class="text-white/60 text-sm mb-1">Tiempo</div>
-              <div id="stat-time" class="text-3xl font-bold text-white">0s</div>
-            </div>
-          </div>
-
-          <!-- Título del texto -->
-          <h3
-            id="titulo-practica"
-            class="text-2xl font-semibold text-white mb-4 text-center"
-          >
-            Cargando texto...
-          </h3>
-
-          <!-- Texto a copiar -->
-          <div class="glass-dark rounded-2xl p-6 mb-6">
             <div
-              id="texto-original"
-              class="text-2xl leading-relaxed text-white/70 text-center"
+              class="glass rounded-3xl p-8 text-center hover:-translate-y-1 transition-transform"
             >
-              <!-- Se llenará dinámicamente -->
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="dashboard-avg-wpm"
+              >
+                0
+              </div>
+              <div
+                class="text-white/70 text-sm uppercase tracking-wide flex items-center justify-center gap-2"
+              >
+                <i data-feather="trending-up" class="w-4 h-4"></i>
+                WPM Promedio
+              </div>
+            </div>
+            <div
+              class="glass rounded-3xl p-8 text-center hover:-translate-y-1 transition-transform"
+            >
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="dashboard-avg-accuracy"
+              >
+                0%
+              </div>
+              <div
+                class="text-white/70 text-sm uppercase tracking-wide flex items-center justify-center gap-2"
+              >
+                <i data-feather="check-circle" class="w-4 h-4"></i>
+                Precisión Promedio
+              </div>
+            </div>
+            <div
+              class="glass rounded-3xl p-8 text-center hover:-translate-y-1 transition-transform"
+            >
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="dashboard-total-texts"
+              >
+                0
+              </div>
+              <div
+                class="text-white/70 text-sm uppercase tracking-wide flex items-center justify-center gap-2"
+              >
+                <i data-feather="file-text" class="w-4 h-4"></i>
+                Textos Disponibles
+              </div>
             </div>
           </div>
 
-          <!-- Área de escritura -->
-          <div class="mb-4">
+          <!-- Contenido del Dashboard -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass rounded-3xl p-8">
+              <div class="flex justify-between items-center mb-6">
+                <h2
+                  class="text-2xl font-semibold text-white flex items-center gap-2"
+                >
+                  <i data-feather="award"></i>
+                  Mejor Resultado
+                </h2>
+              </div>
+              <div id="best-result-container">
+                <p class="text-white/60 text-center">
+                  Aún no tienes prácticas registradas
+                </p>
+              </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8">
+              <div class="flex justify-between items-center mb-6">
+                <h2
+                  class="text-2xl font-semibold text-white flex items-center gap-2"
+                >
+                  <i data-feather="clock"></i>
+                  Última Práctica
+                </h2>
+              </div>
+              <div id="last-result-container">
+                <p class="text-white/60 text-center">
+                  Aún no tienes prácticas registradas
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acceso Rápido -->
+          <div class="glass rounded-3xl p-8 mt-6">
+            <div class="flex justify-between items-center mb-6">
+              <h2
+                class="text-2xl font-semibold text-white flex items-center gap-2"
+              >
+                <i data-feather="zap"></i>
+                Acceso Rápido
+              </h2>
+            </div>
+            <div class="flex gap-4 flex-wrap">
+              <button
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+                style="background: #ffefb3; color: #013e37"
+                onclick="navigateToView('practice')"
+              >
+                <i data-feather="edit-3"></i>
+                Comenzar Práctica
+              </button>
+              <button
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+                onclick="navigateToView('admin')"
+              >
+                <i data-feather="plus-circle"></i>
+                Añadir Texto
+              </button>
+              <button
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+                onclick="navigateToView('history')"
+              >
+                <i data-feather="bar-chart-2"></i>
+                Ver Estadísticas
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================
+                 VISTA: ZONA DE PRÁCTICA
+                 =================================== -->
+        <section id="view-practice" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="edit-3"></i>
+            Zona de Práctica
+          </h1>
+
+          <!-- Filtros -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="mb-4">
+                <label
+                  class="block text-white font-semibold mb-2 flex items-center gap-2"
+                >
+                  <i data-feather="filter" class="w-4 h-4"></i>
+                  Nivel
+                </label>
+                <select
+                  id="filter-nivel"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="">Todos los niveles</option>
+                  <option value="principiante">Principiante</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                  <option value="experto">Experto</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label
+                  class="block text-white font-semibold mb-2 flex items-center gap-2"
+                >
+                  <i data-feather="tag" class="w-4 h-4"></i>
+                  Categoría
+                </label>
+                <select
+                  id="filter-categoria"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="">Todas las categorías</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >&nbsp;</label
+                >
+                <button
+                  class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+                  style="background: #ffefb3; color: #013e37"
+                  id="btn-load-random"
+                >
+                  <i data-feather="shuffle"></i>
+                  Cargar Texto Aleatorio
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas en Tiempo Real -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+          >
+            <div class="glass rounded-3xl p-8 text-center">
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="practice-wpm"
+              >
+                0
+              </div>
+              <div class="text-white/70 text-sm uppercase tracking-wide">
+                WPM
+              </div>
+            </div>
+            <div class="glass rounded-3xl p-8 text-center">
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="practice-accuracy"
+              >
+                100%
+              </div>
+              <div class="text-white/70 text-sm uppercase tracking-wide">
+                Precisión
+              </div>
+            </div>
+            <div class="glass rounded-3xl p-8 text-center">
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="practice-time"
+              >
+                0s
+              </div>
+              <div class="text-white/70 text-sm uppercase tracking-wide">
+                Tiempo
+              </div>
+            </div>
+            <div class="glass rounded-3xl p-8 text-center">
+              <div
+                class="text-5xl font-bold mb-2"
+                style="color: #ffefb3"
+                id="practice-errors"
+              >
+                0
+              </div>
+              <div class="text-white/70 text-sm uppercase tracking-wide">
+                Errores
+              </div>
+            </div>
+          </div>
+
+          <!-- Área de Práctica -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <h3
+              class="text-white text-2xl font-semibold text-center mb-6"
+              id="practice-title"
+            >
+              Cargando texto...
+            </h3>
+
+            <div class="glass-dark rounded-2xl p-12 mb-6">
+              <div
+                id="practice-text-display"
+                class="practice-text text-2xl leading-loose text-center text-white/60 tracking-wide"
+              >
+                <!-- Se llenará dinámicamente -->
+              </div>
+            </div>
+
             <textarea
-              id="input-practica"
-              class="w-full glass-dark rounded-2xl p-6 text-white text-xl resize-none"
-              rows="4"
+              id="practice-input"
+              class="w-full px-6 py-4 bg-white/15 border border-white/25 rounded-xl text-white text-xl placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20 resize-none"
               placeholder="Comienza a escribir aquí..."
+              rows="5"
               disabled
             ></textarea>
           </div>
 
-          <!-- Botones de control -->
-          <div class="flex gap-4">
+          <!-- Controles -->
+          <div class="flex gap-4 flex-wrap">
             <button
-              id="btn-nuevo-texto"
-              class="flex-1 glass btn-glass rounded-2xl py-4 text-white font-semibold text-lg"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+              style="background: #ffefb3; color: #013e37"
+              id="btn-practice-restart"
             >
-              🔄 Nuevo Texto
+              <i data-feather="rotate-ccw"></i>
+              Reiniciar
             </button>
             <button
-              id="btn-reiniciar"
-              class="flex-1 glass btn-glass rounded-2xl py-4 text-white font-semibold text-lg"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+              id="btn-practice-new"
             >
-              ↻ Reintentar
+              <i data-feather="skip-forward"></i>
+              Siguiente Texto
             </button>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- SECCIÓN 2: PANEL DE ADMINISTRACIÓN -->
-      <section id="seccion-admin" class="hidden fade-in">
-        <!-- Formulario CRUD -->
-        <div class="glass rounded-3xl p-8 mb-6">
-          <h2 class="text-3xl font-bold text-white mb-6">
-            <span id="form-title">➕ Crear Nuevo Texto</span>
-          </h2>
+        <!-- ===================================
+                 VISTA: PRÁCTICA PERSONALIZADA
+                 =================================== -->
+        <section id="view-custom-practice" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="target"></i>
+            Práctica Personalizada
+          </h1>
 
-          <form id="form-texto">
-            <input type="hidden" id="texto-id" value="" />
-
-            <div class="mb-4">
-              <label class="block text-white font-semibold mb-2">Título</label>
-              <input
-                type="text"
-                id="texto-titulo"
-                class="w-full glass-dark rounded-xl p-4 text-white"
-                placeholder="Ej: Pangrama Español"
-                required
-              />
-            </div>
-
-            <div class="mb-6">
-              <label class="block text-white font-semibold mb-2"
-                >Contenido del Texto</label
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Generador de Ejercicios -->
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
               >
-              <textarea
-                id="texto-contenido"
-                class="w-full glass-dark rounded-xl p-4 text-white resize-none"
-                rows="5"
-                placeholder="Escribe el texto que los usuarios practicarán..."
-                required
-              ></textarea>
-            </div>
+                <i data-feather="compass"></i>
+                Generador de Ejercicios
+              </h3>
 
-            <div class="flex gap-4">
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Tipo de Práctica</label
+                >
+                <select
+                  id="custom-type"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="letters">Letras Específicas</option>
+                  <option value="numbers">Solo Números</option>
+                  <option value="symbols">Símbolos Especiales</option>
+                  <option value="combinations">Combinaciones Difíciles</option>
+                </select>
+              </div>
+
+              <div class="mb-4" id="letters-input-group">
+                <label class="block text-white font-semibold mb-2"
+                  >Letras a Practicar</label
+                >
+                <input
+                  type="text"
+                  id="custom-letters"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                  placeholder="Ej: asdf jklñ"
+                />
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Longitud (palabras)</label
+                >
+                <input
+                  type="number"
+                  id="custom-length"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                  value="20"
+                  min="10"
+                  max="100"
+                />
+              </div>
+
               <button
-                type="submit"
-                class="flex-1 bg-gradient-to-r from-green-400 to-blue-500 btn-glass rounded-xl py-4 text-white font-bold text-lg"
+                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+                style="background: #ffefb3; color: #013e37"
+                id="btn-generate-custom"
               >
-                💾 Guardar
-              </button>
-              <button
-                type="button"
-                id="btn-cancelar"
-                class="glass btn-glass rounded-xl px-6 py-4 text-white font-semibold hidden"
-              >
-                ✖️ Cancelar
+                <i data-feather="play-circle"></i>
+                Generar y Practicar
               </button>
             </div>
-          </form>
-        </div>
 
-        <!-- Tabla de textos -->
-        <div class="glass rounded-3xl p-8">
-          <h2 class="text-3xl font-bold text-white mb-6">
-            📚 Textos Disponibles
-          </h2>
-
-          <div id="tabla-textos" class="space-y-4">
-            <!-- Se llenará dinámicamente -->
+            <!-- Vista Previa -->
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="eye"></i>
+                Vista Previa
+              </h3>
+              <div
+                id="custom-preview"
+                class="glass-dark rounded-2xl p-8 min-h-[200px] flex items-center justify-center"
+              >
+                <p class="text-white/60 text-center">
+                  Configura y genera un ejercicio
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+
+          <!-- Área de Práctica Personalizada -->
+          <div
+            class="glass rounded-3xl p-8 mt-6 hidden"
+            id="custom-practice-area"
+          >
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6"
+            >
+              <div class="glass rounded-3xl p-8 text-center">
+                <div
+                  class="text-5xl font-bold mb-2"
+                  style="color: #ffefb3"
+                  id="custom-wpm"
+                >
+                  0
+                </div>
+                <div class="text-white/70 text-sm uppercase tracking-wide">
+                  WPM
+                </div>
+              </div>
+              <div class="glass rounded-3xl p-8 text-center">
+                <div
+                  class="text-5xl font-bold mb-2"
+                  style="color: #ffefb3"
+                  id="custom-accuracy"
+                >
+                  100%
+                </div>
+                <div class="text-white/70 text-sm uppercase tracking-wide">
+                  Precisión
+                </div>
+              </div>
+              <div class="glass rounded-3xl p-8 text-center">
+                <div
+                  class="text-5xl font-bold mb-2"
+                  style="color: #ffefb3"
+                  id="custom-time"
+                >
+                  0s
+                </div>
+                <div class="text-white/70 text-sm uppercase tracking-wide">
+                  Tiempo
+                </div>
+              </div>
+              <div class="glass rounded-3xl p-8 text-center">
+                <div
+                  class="text-5xl font-bold mb-2"
+                  style="color: #ffefb3"
+                  id="custom-errors"
+                >
+                  0
+                </div>
+                <div class="text-white/70 text-sm uppercase tracking-wide">
+                  Errores
+                </div>
+              </div>
+            </div>
+
+            <textarea
+              id="custom-practice-input"
+              class="w-full px-6 py-4 bg-white/15 border border-white/25 rounded-xl text-white text-xl placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20 resize-none mb-4"
+              placeholder="Escribe aquí..."
+              rows="5"
+            ></textarea>
+
+            <button
+              class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+              id="btn-custom-restart"
+            >
+              <i data-feather="rotate-ccw"></i>
+              Reiniciar
+            </button>
+          </div>
+        </section>
+
+        <!-- ===================================
+                 VISTA: HISTORIAL Y ESTADÍSTICAS
+                 =================================== -->
+        <section id="view-history" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="bar-chart-2"></i>
+            Historial y Estadísticas
+          </h1>
+
+          <!-- Gráficas -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="trending-up"></i>
+                Progreso de WPM
+              </h3>
+              <div class="chart-container">
+                <canvas id="chart-wpm"></canvas>
+              </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="percent"></i>
+                Evolución de Precisión
+              </h3>
+              <div class="chart-container">
+                <canvas id="chart-accuracy"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabla de Resultados -->
+          <div class="glass rounded-3xl p-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2
+                class="text-2xl font-semibold text-white flex items-center gap-2"
+              >
+                <i data-feather="list"></i>
+                Últimas Prácticas
+              </h2>
+              <button
+                class="inline-flex items-center gap-2 p-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+                id="btn-clear-history"
+                title="Limpiar historial"
+              >
+                <i data-feather="trash-2"></i>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="history-table w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      Texto
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      WPM
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      Precisión
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      Tiempo
+                    </th>
+                    <th
+                      class="px-4 py-3 text-left text-white font-semibold bg-black/10 border-b border-white/10"
+                    >
+                      Errores
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <tr>
+                    <td
+                      colspan="6"
+                      class="px-4 py-3 text-center text-white/60 border-b border-white/10"
+                    >
+                      No hay prácticas registradas
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Botón de Exportación -->
+          <div class="mt-6 flex gap-4">
+            <button
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+              style="background: #ffefb3; color: #013e37"
+              id="btn-export-history"
+            >
+              <i data-feather="download"></i>
+              Exportar Historial
+            </button>
+          </div>
+        </section>
+
+        <!-- ===================================
+                 VISTA: GESTIÓN DE TEXTOS (ADMIN)
+                 =================================== -->
+        <section id="view-admin" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="database"></i>
+            Gestión de Textos
+          </h1>
+
+          <!-- Formulario CRUD -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <h2
+              class="text-white text-2xl font-semibold mb-6 flex items-center gap-2"
+              id="admin-form-title"
+            >
+              <i data-feather="plus-circle"></i>
+              Crear Nuevo Texto
+            </h2>
+
+            <form id="admin-form">
+              <input type="hidden" id="admin-text-id" />
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="mb-4">
+                  <label class="block text-white font-semibold mb-2"
+                    >Título</label
+                  >
+                  <input
+                    type="text"
+                    id="admin-titulo"
+                    class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                    required
+                  />
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-white font-semibold mb-2"
+                    >Nivel</label
+                  >
+                  <select
+                    id="admin-nivel"
+                    class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                    required
+                  >
+                    <option value="principiante">Principiante</option>
+                    <option value="intermedio">Intermedio</option>
+                    <option value="avanzado">Avanzado</option>
+                    <option value="experto">Experto</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="mb-4">
+                  <label class="block text-white font-semibold mb-2"
+                    >Categoría</label
+                  >
+                  <input
+                    type="text"
+                    id="admin-categoria"
+                    class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                    required
+                    placeholder="Ej: tecnología, literatura"
+                  />
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-white font-semibold mb-2"
+                    >Palabras Clave (separadas por coma)</label
+                  >
+                  <input
+                    type="text"
+                    id="admin-palabras"
+                    class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                    placeholder="Ej: programación, web, javascript"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-6">
+                <label class="block text-white font-semibold mb-2"
+                  >Contenido del Texto</label
+                >
+                <textarea
+                  id="admin-texto"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20 resize-vertical min-h-[120px]"
+                  rows="6"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  type="submit"
+                  class="inline-flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-semibold transition-all hover:bg-green-600 hover:-translate-y-1"
+                >
+                  <i data-feather="save"></i>
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1 hidden"
+                  id="btn-cancel-edit"
+                >
+                  <i data-feather="x-circle"></i>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Importar/Exportar -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <h3
+              class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+            >
+              <i data-feather="package"></i>
+              Importar / Exportar Datos
+            </h3>
+            <div class="flex gap-4 flex-wrap">
+              <button
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+                style="background: #ffefb3; color: #013e37"
+                id="btn-export-data"
+              >
+                <i data-feather="download"></i>
+                Exportar Textos
+              </button>
+              <label
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1 cursor-pointer"
+              >
+                <i data-feather="upload"></i>
+                Importar Textos
+                <input
+                  type="file"
+                  id="input-import"
+                  accept=".json"
+                  class="hidden"
+                />
+              </label>
+            </div>
+          </div>
+
+          <!-- Filtros -->
+          <div class="glass rounded-3xl p-8 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Filtrar por Nivel</label
+                >
+                <select
+                  id="admin-filter-nivel"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="">Todos</option>
+                  <option value="principiante">Principiante</option>
+                  <option value="intermedio">Intermedio</option>
+                  <option value="avanzado">Avanzado</option>
+                  <option value="experto">Experto</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Filtrar por Categoría</label
+                >
+                <select
+                  id="admin-filter-categoria"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="">Todas</option>
+                </select>
+              </div>
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Buscar</label
+                >
+                <input
+                  type="text"
+                  id="admin-search"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                  placeholder="Buscar por título..."
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de Textos -->
+          <div class="glass rounded-3xl p-8">
+            <div class="flex justify-between items-center mb-6">
+              <h2
+                class="text-2xl font-semibold text-white flex items-center gap-2"
+              >
+                <i data-feather="file-text"></i>
+                Textos Disponibles
+              </h2>
+              <span
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm"
+                style="background: #ffefb3; color: #013e37"
+                id="text-count"
+                >0 textos</span
+              >
+            </div>
+
+            <div id="admin-texts-container">
+              <!-- Se llenará dinámicamente -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================
+                 VISTA: ANÁLISIS DE ERRORES
+                 =================================== -->
+        <section id="view-analysis" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="activity"></i>
+            Análisis de Errores
+          </h1>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Teclas Problemáticas -->
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="alert-circle"></i>
+                Teclas con Más Errores
+              </h3>
+              <div id="error-keys-container">
+                <p class="text-white/60 text-center">
+                  Realiza prácticas para ver estadísticas
+                </p>
+              </div>
+            </div>
+
+            <!-- Sugerencias -->
+            <div class="glass rounded-3xl p-8">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="message-circle"></i>
+                Sugerencias de Mejora
+              </h3>
+              <div id="suggestions-container">
+                <p class="text-white/60 text-center">
+                  Completa más prácticas para recibir sugerencias personalizadas
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mapa de Calor -->
+          <div class="glass rounded-3xl p-8">
+            <h3
+              class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+            >
+              <i data-feather="grid"></i>
+              Mapa de Calor de Errores
+            </h3>
+            <div id="heatmap-container" class="text-center">
+              <p class="text-white/60">Funcionalidad en desarrollo</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================
+                 VISTA: CONFIGURACIÓN
+                 =================================== -->
+        <section id="view-settings" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
+          >
+            <i data-feather="settings"></i>
+            Configuración
+          </h1>
+
+          <div class="glass rounded-3xl p-8 mb-6">
+            <div class="mb-12">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="monitor"></i>
+                Visualización
+              </h3>
+
+              <div
+                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
+              >
+                <span class="text-white/90 font-medium"
+                  >Tamaño de Fuente Grande</span
+                >
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-large-font" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="mb-4">
+                <label class="block text-white font-semibold mb-2"
+                  >Espaciado de Línea</label
+                >
+                <select
+                  id="setting-line-height"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                >
+                  <option value="1.5">Compacto</option>
+                  <option value="2" selected>Normal</option>
+                  <option value="2.5">Amplio</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-12">
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="volume-2"></i>
+                Sonido y Efectos
+              </h3>
+
+              <div
+                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
+              >
+                <span class="text-white/90 font-medium">Sonidos de Teclas</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-sounds" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div
+                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
+              >
+                <span class="text-white/90 font-medium">Efectos de Error</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-error-effects" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <h3
+                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              >
+                <i data-feather="clock"></i>
+                Práctica
+              </h3>
+
+              <div
+                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
+              >
+                <span class="text-white/90 font-medium">Límite de Tiempo</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-time-limit" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="mb-4 hidden" id="time-limit-input">
+                <label class="block text-white font-semibold mb-2"
+                  >Tiempo Límite (minutos)</label
+                >
+                <input
+                  type="number"
+                  id="setting-time-value"
+                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
+                  value="5"
+                  min="1"
+                  max="30"
+                />
+              </div>
+
+              <div
+                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
+              >
+                <span class="text-white/90 font-medium"
+                  >Mostrar Carácter Actual</span
+                >
+                <label class="toggle-switch">
+                  <input type="checkbox" id="setting-show-current" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-4 flex-wrap">
+            <button
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+              style="background: #ffefb3; color: #013e37"
+              id="btn-save-settings"
+            >
+              <i data-feather="save"></i>
+              Guardar Configuración
+            </button>
+            <button
+              class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+              id="btn-reset-settings"
+            >
+              <i data-feather="rotate-ccw"></i>
+              Restaurar Predeterminados
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
 
-    <!-- Script de lógica -->
+    <!-- Modal de Resultados -->
+    <div
+      class="modal-overlay hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] items-center justify-center"
+      id="results-modal"
+    >
+      <div class="modal glass rounded-3xl p-12 max-w-lg w-11/12">
+        <h2
+          class="text-white text-4xl font-bold text-center mb-6 flex items-center justify-center gap-3"
+        >
+          <i data-feather="award" style="color: #ffefb3"></i>
+          ¡Práctica Completada!
+        </h2>
+
+        <div class="grid grid-cols-2 gap-6 mb-6">
+          <div class="text-center">
+            <div
+              class="text-5xl font-bold mb-2"
+              style="color: #ffefb3"
+              id="modal-wpm"
+            >
+              0
+            </div>
+            <div class="text-white/60 text-sm">Palabras por Minuto</div>
+          </div>
+          <div class="text-center">
+            <div
+              class="text-5xl font-bold mb-2"
+              style="color: #ffefb3"
+              id="modal-accuracy"
+            >
+              0%
+            </div>
+            <div class="text-white/60 text-sm">Precisión</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-6 mb-6">
+          <div class="text-center">
+            <div class="text-2xl font-semibold text-white mb-1" id="modal-time">
+              0s
+            </div>
+            <div class="text-white/60 text-sm">Tiempo Total</div>
+          </div>
+          <div class="text-center">
+            <div
+              class="text-2xl font-semibold text-white mb-1"
+              id="modal-errors"
+            >
+              0
+            </div>
+            <div class="text-white/60 text-sm">Errores</div>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <button
+            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
+            style="background: #ffefb3; color: #013e37"
+            id="btn-modal-new"
+          >
+            <i data-feather="arrow-right"></i>
+            Siguiente Texto
+          </button>
+          <button
+            class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
+            id="btn-modal-close"
+          >
+            <i data-feather="x"></i>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Principal -->
     <script src="app.js"></script>
+
+    <script>
+      // Inicializar iconos Feather
+      feather.replace();
+    </script>
   </body>
 </html>

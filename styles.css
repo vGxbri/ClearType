@@ -1,0 +1,211 @@
+/* ===================================
+   TYPEMASTER PRO - CUSTOM STYLES
+   Solo estilos que Tailwind no cubre
+   =================================== */
+
+:root {
+    --color-primary: #013E37;
+    --color-accent: #FFEFB3;
+}
+
+body {
+    font-family: 'Poppins', 'Inter', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #013E37 0%, #025950 100%);
+}
+
+/* ===================================
+   GLASSMORPHISM EFFECTS
+   =================================== */
+
+.glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(1, 62, 55, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(1, 62, 55, 0.15);
+}
+
+.glass-dark {
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===================================
+   PRÁCTICA DE MECANOGRAFÍA
+   =================================== */
+
+.char-correct {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.char-error {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.2);
+    padding: 0 2px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.char-pending {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.char-current {
+    color: #FFEFB3;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* ===================================
+   NAVEGACIÓN
+   =================================== */
+
+.nav-link {
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateX(5px);
+}
+
+.nav-link.active {
+    background: #FFEFB3;
+    color: #013E37;
+}
+
+/* ===================================
+   ANIMACIONES
+   =================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* ===================================
+   TOGGLE SWITCH
+   =================================== */
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: 0.4s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #FFEFB3;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* ===================================
+   SCROLLBAR
+   =================================== */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 239, 179, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 239, 179, 0.5);
+}
+
+/* ===================================
+   FIXES Y AJUSTES
+   =================================== */
+
+.view-section {
+    display: none;
+}
+
+.view-section.active {
+    display: block;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Modal overlay active state */
+.modal-overlay.active {
+    display: flex !important;
+}
+
+/* Inputs con glassmorphism */
+input::placeholder,
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Chart.js container */
+.chart-container {
+    position: relative;
+    height: 300px;
+}
