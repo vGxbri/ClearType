@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1678886412,
+    "titulo": "Pangrama Clásico",
+    "texto": "El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja."
+  },
+  {
+    "id": 1678886513,
+    "titulo": "Frase Motivacional",
+    "texto": "La práctica hace al maestro. Cada tecla que presionas es un paso más hacia la perfección en mecanografía."
+  },
+  {
+    "id": 1678886614,
+    "titulo": "Tecnología Moderna",
+    "texto": "JavaScript es un lenguaje de programación versátil que permite crear aplicaciones web interactivas y dinámicas en el navegador."
+  },
+  {
+    "id": 1678886715,
+    "titulo": "Cita Inspiradora",
+    "texto": "El éxito es la suma de pequeños esfuerzos repetidos día tras día. No importa cuán lento vayas, siempre y cuando no te detengas."
+  },
+  {
+    "id": 1678886816,
+    "titulo": "Descripción Web",
+    "texto": "El desarrollo web frontend combina HTML para estructura, CSS para diseño y JavaScript para interactividad, creando experiencias de usuario excepcionales."
+  }
+]
