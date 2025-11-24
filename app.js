@@ -1,12 +1,8 @@
-console.log('=== APP.JS CARGADO ===');
-console.log('jQuery version:', typeof $ !== 'undefined' ? $.fn.jquery : 'NO CARGADO');
+
 
 $(document).ready(function() {
-    console.log('=== DOCUMENT READY EJECUTADO ===');
     
-    // ============================================
-    // VARIABLES GLOBALES
-    // ============================================
+    // Variables globales
     
     let textoActual = null;
     let bufferTexto = ''; // Buffer global para el texto escrito
@@ -50,20 +46,14 @@ $(document).ready(function() {
     // Usuario actual
     let currentUser = null;
 
-    // ============================================
-    // RECURSOS DE AUDIO (Base64 para no depender de archivos externos)
-    // ============================================
+    // Recursos de Audio
     // Sonido "Click" mecánico suave
-    const soundClick = new Audio("data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAEA//8BAAAAAAAA//8="); 
-    // (Nota: Este es un placeholder de silencio para evitar errores si no quieres un sonido real largo aquí. 
-    // Para un click real, usa un archivo .mp3 corto o este hack simple de oscilador abajo)
+    const soundClick = new Audio("data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAEA//8BAAAAAAAA//8=");
     
     // Mejor usamos la API de Audio del navegador para generar sonidos sintéticos sin cargar archivos
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     
-    // ============================================
-    // INICIALIZACIÓN
-    // ============================================
+    // Inicialización
     
     function inicializar() {
         // Verificar sesión
@@ -95,9 +85,7 @@ $(document).ready(function() {
         }
     }
     
-    // ============================================
-    // NAVEGACIÓN ENTRE VISTAS
-    // ============================================
+    // Navegación
     
     function navegarAVista(vistaId) {
         // Guardar vista actual
@@ -115,12 +103,10 @@ $(document).ready(function() {
         
         // Ocultar/Mostrar sidebar según vista
         if (vistaId === 'auth') {
-            console.log('Navegando a vista AUTH');
             $('#sidebar').hide();
             $('#sidebar-overlay').hide();
             
-            // Configurar eventos de autenticación (deben configurarse después de que el DOM esté visible)
-            // FIX: Movido a configurarEventos() para evitar race conditions
+            // Configurar eventos de autenticación
         } else {
             $('#sidebar').show();
         }
@@ -152,9 +138,7 @@ $(document).ready(function() {
     
     window.navigateToView = navegarAVista;
     
-    // ============================================
-    // AUTENTICACIÓN
-    // ============================================
+    // Autenticación
     
     function login(username, password) {
         $.ajax({
@@ -171,13 +155,10 @@ $(document).ready(function() {
                     currentUser = response.user;
                     localStorage.setItem('cleartype_user', JSON.stringify(currentUser));
                     
-                    // --- AÑADIR ESTO ---
                     if (currentUser.config) {
                         configuracion = { ...configuracion, ...currentUser.config };
-                        // Guardar copia local también para acceso rápido
                         localStorage.setItem(`cleartype_config_${currentUser.id}`, JSON.stringify(configuracion));
                     }
-                    // -------------------
                     
                     mostrarAlerta('Bienvenido, ' + currentUser.username, 'success');
                     
@@ -232,9 +213,7 @@ $(document).ready(function() {
         }, 800);
     }
     
-    // ============================================
-    // FUNCIONES AJAX
-    // ============================================
+    // Funciones AJAX
     
     function cargarTextos() {
         $.ajax({
@@ -445,9 +424,7 @@ $(document).ready(function() {
         });
     }
     
-    // ============================================
-    // LÓGICA DE PRÁCTICA
-    // ============================================
+    // Lógica de práctica
     
     function mostrarTextoPractica() {
         if (!textoActual) return;
@@ -498,10 +475,6 @@ $(document).ready(function() {
                 } else {
                     $char.removeClass('char-pending char-correct char-current').addClass('char-error');
                     erroresVisuales++;
-                    
-                    // --- CORRECCIÓN ---
-                    // AQUÍ ESTABA EL ERROR: Hemos quitado la suma a 'teclasErrores' de este bucle.
-                    // Ahora solo gestionamos el aspecto visual.
                 }
             } else if (index === textoEscrito.length && configuracion.showCurrent) {
                 $char.removeClass('char-pending char-correct char-error').addClass('char-current');
@@ -511,9 +484,6 @@ $(document).ready(function() {
         });
         
         estadisticasActuales.correctos = correctos;
-        // Nota: estadisticasActuales.errores ahora acumulará los errores reales capturados en el keydown,
-        // o puedes igualarlo a erroresVisuales si prefieres que la precisión suba si corrigen el texto (cuando implementes borrar).
-        // Por ahora, para mantener coherencia con tu sistema "sin borrar", usamos el acumulador visual:
         estadisticasActuales.errores = erroresVisuales;
         
         const totalEscritos = textoEscrito.length;
@@ -563,9 +533,7 @@ $(document).ready(function() {
     
     function finalizarPractica(esPersonalizado = false) {
         clearInterval(intervaloTimer);
-        
-        // Ya no hay input que deshabilitar
-        
+
         const resultado = {
             textoId: textoActual ? textoActual.id : 0,
             textoTitulo: textoActual ? textoActual.titulo : 'Práctica Personalizada',
@@ -615,9 +583,7 @@ $(document).ready(function() {
         $('#results-modal').removeClass('hidden').addClass('flex');
     }
     
-    // ============================================
-    // PRÁCTICA PERSONALIZADA
-    // ============================================
+    // Práctica personalizada
     
     function generarPracticaPersonalizada() {
         const tipo = $('#custom-type').val();
@@ -723,24 +689,20 @@ $(document).ready(function() {
         return resultado.join(' ');
     }
     
-    // ============================================
-    // GESTIÓN DE TEXTOS (ADMIN)
-    // ============================================
+    // Gestión de Textos (Admin)
     
     function renderizarTextos() {
         const nivel = $('#admin-filter-nivel').val();
-        const categoria = $('#admin-filter-categoria').val(); // Asegúrate de que este select exista o quita esta línea si usas el diseño nuevo simplificado
+        const categoria = $('#admin-filter-categoria').val();
         const busqueda = $('#admin-search').val().toLowerCase();
         
         let textosFiltrados = todosLosTextos.filter(texto => {
             const cumpleNivel = !nivel || texto.nivel === nivel;
-            // Si mantienes el filtro de categoría en el HTML nuevo, úsalo, si no, puedes quitarlo
             const cumpleCategoria = !categoria || (texto.categoria && texto.categoria === categoria); 
             const cumpleBusqueda = !busqueda || texto.titulo.toLowerCase().includes(busqueda);
             return cumpleNivel && cumpleCategoria && cumpleBusqueda;
         });
         
-        // Actualizar contador en la cabecera
         $('#admin-total-count').text(`${textosFiltrados.length} Textos`);
 
         const $container = $('#admin-texts-container');
@@ -769,7 +731,6 @@ $(document).ready(function() {
             
             const config = nivelConfig[texto.nivel] || { color: 'bg-gray-500', text: texto.nivel };
             
-            // Calculamos palabras para mostrar info útil
             const wordCount = texto.texto.trim().split(/\s+/).length;
             
             const card = `
@@ -863,9 +824,7 @@ $(document).ready(function() {
         $('#dashboard-total-texts').text(todosLosTextos.length);
     }
     
-    // ============================================
-    // HISTORIAL Y ESTADÍSTICAS
-    // ============================================
+    // Historial y Estadísticas
     
     function cargarDashboard() {
         cargarEstadisticas();
@@ -967,7 +926,7 @@ $(document).ready(function() {
         const wpmData = ultimos10.map(r => r.wpm);
         const accuracyData = ultimos10.map(r => r.precision);
         
-        // Gráfica WPM - Destruir instancia anterior si existe
+        // Gráfica WPM
         const ctxWpm = document.getElementById('chart-wpm');
         if (ctxWpm) {
             if (chartWpm) {
@@ -1000,7 +959,7 @@ $(document).ready(function() {
             });
         }
         
-        // Gráfica Precisión - Destruir instancia anterior si existe
+        // Gráfica Precisión
         const ctxAcc = document.getElementById('chart-accuracy');
         if (ctxAcc) {
             if (chartAccuracy) {
@@ -1034,13 +993,7 @@ $(document).ready(function() {
         }
     }
     
-    // ============================================
-    // ANÁLISIS DE ERRORES
-    // ============================================
-    
-    // ============================================
-    // ANÁLISIS DE ERRORES (MEJORADO)
-    // ============================================
+    // Análisis de Errores
     
     function cargarAnalisisErrores() {
         const $heatmapContainer = $('#heatmap-container');
@@ -1070,10 +1023,10 @@ $(document).ready(function() {
             }
         });
 
-        // Si no hay errores (eres perfecto), mostrar mensaje
+        // Si no hay errores, mostrar mensaje
         if (totalErroresRegistrados === 0) {
             $topErrorsContainer.html('<div class="w-full text-center py-8"><i data-feather="award" class="w-12 h-12 text-[#FFEFB3] mx-auto mb-3"></i><p class="text-[#FFEFB3] font-bold">¡Impecable!</p><p class="text-sm text-white/60">No has cometido errores aún.</p></div>');
-            renderizarBalanceManos(0, 0); // Resetear barras
+            renderizarBalanceManos(0, 0);
             feather.replace();
             return;
         }
@@ -1088,17 +1041,15 @@ $(document).ready(function() {
             const porcentaje = Math.round((count / totalErroresRegistrados) * 100);
             const keyDisplay = key === ' ' ? 'Space' : key.toUpperCase();
             
-            // CONFIGURACIÓN DE COLORES
-            // Usamos 'style' para el fondo para evitar que Tailwind CDN lo ignore.
-            // He subido la opacidad a 0.2 (20%) para que se note más.
+            // Configuración de colores
             let theme = {};
             
             if (index === 0) {
                 // #1 ROJO
                 theme = { 
                     classes: 'text-red-400 border-red-500', 
-                    bg: 'rgba(239, 68, 68, 0.2)',  // Color sólido con opacidad manual
-                    shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.2)]' // Resplandor rojo
+                    bg: 'rgba(239, 68, 68, 0.2)',
+                    shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.2)]'
                 };
             } else if (index === 1) {
                 // #2 NARANJA
@@ -1131,15 +1082,14 @@ $(document).ready(function() {
         // 3. Renderizar Heatmap
         renderizarHeatmap(mapaErrores, totalErroresRegistrados);
         
-        // 4. NUEVO: Calcular Balance de Manos
+        // 4. Calcular Balance de Manos
         const manoIzquierda = ['q','w','e','r','t','a','s','d','f','g','z','x','c','v','b'];
-        // Todo lo demás se asume derecha (incluyendo signos comunes por simplicidad visual)
         
         let erroresIzq = 0;
         let erroresDer = 0;
         
         Object.keys(mapaErrores).forEach(k => {
-            if (k === ' ') return; // Ignorar espacio para el balance lateral
+            if (k === ' ') return;
             if (manoIzquierda.includes(k.toLowerCase())) {
                 erroresIzq += mapaErrores[k];
             } else {
@@ -1198,8 +1148,6 @@ $(document).ready(function() {
                 let intensityClass = '';
                 
                 if (count > 0) {
-                    // Calcular intensidad relativa al máximo error o al total
-                    // Usamos una escala simple basada en la cantidad absoluta para mayor claridad inmediata
                     if (count >= 10) intensityClass = 'error-high';
                     else if (count >= 5) intensityClass = 'error-med';
                     else intensityClass = 'error-low';
@@ -1265,7 +1213,7 @@ $(document).ready(function() {
                 type: 'info'
             });
             
-            // Sugerencia de dedo (simplificada)
+            // Sugerencia de dedo
             const mapaDedos = {
                 'a': 'meñique izquierdo', 'q': 'meñique izquierdo', 'z': 'meñique izquierdo',
                 's': 'anular izquierdo', 'w': 'anular izquierdo', 'x': 'anular izquierdo',
@@ -1309,9 +1257,7 @@ $(document).ready(function() {
         $container.html(html);
     }
     
-    // ============================================
-    // CONFIGURACIÓN
-    // ============================================
+    // Configuración
     
     function cargarConfiguracion() {
         let configCargada = null;
@@ -1332,7 +1278,7 @@ $(document).ready(function() {
             if (stored) configCargada = JSON.parse(stored);
         }
 
-        // Si encontramos configuración, la mezclamos con los defaults para asegurar compatibilidad
+        // Si encontramos configuración, la mezclamos con los defaults
         if (configCargada) {
             configuracion = { ...configuracion, ...configCargada };
         }
@@ -1356,13 +1302,13 @@ $(document).ready(function() {
             showCurrent: $('#setting-show-current').is(':checked')
         };
         
-        // 2. Guardar en LocalStorage (Copia local inmediata)
+        // 2. Guardar en LocalStorage
         const configKey = currentUser ? `cleartype_config_${currentUser.id}` : 'cleartype_config';
         localStorage.setItem(configKey, JSON.stringify(configuracion));
         
-        // 3. Guardar en Backend (Persistencia por usuario)
+        // 3. Guardar en Backend
         if (currentUser) {
-            // Actualizamos también el objeto currentUser en memoria local para mantener sincronía
+            // Actualizamos también el objeto currentUser en memoria local
             currentUser.config = configuracion;
             localStorage.setItem('cleartype_user', JSON.stringify(currentUser));
             
@@ -1404,11 +1350,9 @@ $(document).ready(function() {
     }
     
     function aplicarConfiguracion() {
-        // Seleccionamos ambos contenedores (Práctica normal y Personalizada)
         const $textContainer = $('#practice-text-display, .practice-text');
         
         // 1. Aplicar Estilos Visuales
-        // Nota: line-height va sin unidad para ser proporcional al tamaño de fuente
         $textContainer.css({
             'font-family': configuracion.fontFamily,
             'font-size': configuracion.fontSize + 'rem',
@@ -1417,12 +1361,10 @@ $(document).ready(function() {
         });
         
         // 2. Aplicar Estilo de Cursor
-        // Eliminamos todas las clases posibles de cursor antes de añadir la nueva
         $textContainer.removeClass('caret-line caret-block caret-underscore caret-outline');
         $textContainer.addClass('caret-' + configuracion.caretStyle);
 
         // 3. Sincronizar Inputs del Panel (UI)
-        // Esto sirve para que si recargas la página, los controles reflejen la realidad
         $('#setting-font-family').val(configuracion.fontFamily);
         
         $('#setting-font-size').val(configuracion.fontSize);
@@ -1444,13 +1386,9 @@ $(document).ready(function() {
         
         $('#time-limit-input').toggle(configuracion.timeLimit);
         
-        // CORRECCIÓN: Forzamos el redibujado visual para que "Resaltar Actual" 
-        // se aplique inmediatamente si estamos en medio de una práctica.
+        // Forzamos el redibujado visual para que "Resaltar Actual" se aplique inmediatamente
         const isCustomView = $('#view-custom-practice').hasClass('active');
-        // Llamamos a compararTexto para que re-calcule las clases CSS (char-current)
-        if (textoActual || textosPracticaPersonalizada) {
-            compararTexto(isCustomView); 
-        }
+        compararTexto(isCustomView); 
     }
     
     function restaurarConfiguracion() {
@@ -1469,9 +1407,7 @@ $(document).ready(function() {
         mostrarAlerta('Configuración restaurada', 'success');
     }
     
-    // ============================================
-    // IMPORTAR/EXPORTAR
-    // ============================================
+    // Importar/Exportar
     
     function exportarDatos() {
         const dataStr = JSON.stringify(todosLosTextos, null, 2);
@@ -1540,9 +1476,7 @@ $(document).ready(function() {
         reader.readAsText(archivo);
     }
     
-    // ============================================
-    // UTILIDADES
-    // ============================================
+    // Utilidades
     
     function escapeHtml(text) {
         const map = {
@@ -1600,7 +1534,7 @@ $(document).ready(function() {
         
         const $toast = $(toastHtml);
         
-        // Ensure container exists (safety check)
+        // Ensure container exists
         let $container = $('#toast-container');
         if ($container.length === 0) {
             $('body').append('<div id="toast-container"></div>');
@@ -1620,7 +1554,7 @@ $(document).ready(function() {
             $toast.removeClass('show');
             setTimeout(() => {
                 $toast.remove();
-            }, 400); // Wait for transition
+            }, 400);
         }, 4000);
         
         // Click to dismiss
@@ -1632,22 +1566,17 @@ $(document).ready(function() {
         });
     }
     
-    // ============================================
-    // CONFIGURACIÓN DE EVENTOS
-    // ============================================
+    // Configuración de Eventos
     
     function configurarEventosAuth() {
         $('#form-login').off('submit').on('submit', function(e) {
-            console.log('LOGIN SUBMIT TRIGGERED!');
             e.preventDefault();
             const username = $('#login-username').val().trim();
             const password = $('#login-password').val();
-            console.log('Login attempt:', username);
             login(username, password);
         });
         
         $('#form-register').off('submit').on('submit', function(e) {
-            console.log('REGISTER SUBMIT TRIGGERED!');
             e.preventDefault();
             const username = $('#register-username').val().trim();
             const password = $('#register-password').val();
@@ -1658,12 +1587,10 @@ $(document).ready(function() {
                 return;
             }
             
-            console.log('Register attempt:', username);
             register(username, password);
         });
         
         $('#btn-show-register').off('click').on('click', function(e) {
-            console.log('SHOW REGISTER CLICKED!');
             e.preventDefault();
             $('#form-login').addClass('hidden');
             $('#form-register').removeClass('hidden');
@@ -1671,7 +1598,6 @@ $(document).ready(function() {
         });
         
         $('#btn-show-login').off('click').on('click', function(e) {
-            console.log('SHOW LOGIN CLICKED!');
             e.preventDefault();
             $('#form-register').addClass('hidden');
             $('#form-login').removeClass('hidden');
@@ -1685,7 +1611,6 @@ $(document).ready(function() {
         // Logout
         $(document).off('click', '#btn-logout').on('click', '#btn-logout', function(e) {
             e.preventDefault();
-            console.log('Intento de logout detectado'); // Para depuración
             logout();
         });
 
@@ -1703,7 +1628,7 @@ $(document).ready(function() {
         
         // Cerrar sidebar al navegar en móvil
         $('.nav-link').on('click', function() {
-            if (window.innerWidth < 1024) { // lg breakpoint
+            if (window.innerWidth < 1024) {
                 $('#sidebar').addClass('-translate-x-full');
                 $('#sidebar-overlay').addClass('hidden');
             }
@@ -1755,7 +1680,7 @@ $(document).ready(function() {
                         // B. Efecto Visual (Flash Rojo)
                         if (configuracion.errorEffects) {
                             const $overlay = $('#flash-effect-overlay');
-                            // Forzamos un reflow quitando la clase primero si existía (para flashes rápidos seguidos)
+                            // Forzamos un reflow quitando la clase primero si existía
                             $overlay.removeClass('flash-active');
                             
                             // Pequeño hack para forzar al navegador a procesar el cambio
@@ -1795,7 +1720,7 @@ $(document).ready(function() {
                             return;
                         }
                     } 
-                    // 2. SONIDO DE ÉXITO (Click Mecánico)
+                    // 2. SONIDO DE ÉXITO
                     else {
                         if (configuracion.sounds) playMechanicalClick();
                     }
@@ -1858,12 +1783,11 @@ $(document).ready(function() {
                 return;
             }
 
-            // Comprobamos si el botón ya está en "modo confirmación" (segundo clic)
             if ($btn.data('confirming')) {
                 // --- EJECUTAR BORRADO ---
                 
                 // Feedback visual de carga
-                const width = $btn.outerWidth(); // Mantener ancho para que no salte
+                const width = $btn.outerWidth();
                 $btn.css('width', width).prop('disabled', true).html('<i data-feather="loader" class="animate-spin"></i>');
                 feather.replace();
 
@@ -1876,7 +1800,6 @@ $(document).ready(function() {
                     },
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Respuesta servidor:', response);
                         if (response.status === 'success') {
                             mostrarAlerta('Historial borrado correctamente', 'success');
                             
@@ -1900,7 +1823,6 @@ $(document).ready(function() {
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error AJAX:', error);
                         mostrarAlerta('Error de conexión con el servidor', 'error');
                     },
                     complete: function() {
@@ -1914,7 +1836,6 @@ $(document).ready(function() {
                 $btn.data('confirming', true);
                 
                 // Cambiar estilo a ROJO (Alerta)
-                // Nota: Usamos style directo para asegurar que sobreescribe las clases de Tailwind temporalmente si hay conflictos
                 $btn.css('background-color', '#ef4444').css('border-color', '#dc2626');
                 $btn.html('<span class="text-xs font-bold px-1 text-white">¿Seguro?</span>');
                 
@@ -1936,10 +1857,9 @@ $(document).ready(function() {
             feather.replace();
         }
 
-        // 2. Exportar Historial (Faltaba este evento en tu código)
+        // 2. Exportar Historial
         $('body').off('click', '#btn-export-history').on('click', '#btn-export-history', function(e) {
             e.preventDefault();
-            console.log('Botón exportar historial pulsado');
             
             if (!currentUser) {
                 mostrarAlerta('Inicia sesión para exportar tus datos', 'warning');
@@ -1983,11 +1903,9 @@ $(document).ready(function() {
         });
     }
 
-    // ============================================
-    // RECURSOS DE AUDIO
-    // ============================================
+    // Recursos de Audio
 
-    // Función para "despertar" el audio (necesario en Chrome/Edge)
+    // Función para "despertar" el audio
     function resumeAudioContext() {
         if (audioContext.state === 'suspended') {
             audioContext.resume();
@@ -1995,7 +1913,7 @@ $(document).ready(function() {
     }
 
     function playMechanicalClick() {
-        resumeAudioContext(); // Intentar despertar siempre
+        resumeAudioContext();
         
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -2035,9 +1953,7 @@ $(document).ready(function() {
         oscillator.stop(audioContext.currentTime + 0.15);
     }
     
-    // ============================================
-    // INICIO
-    // ============================================
+    // Inicio
     
     inicializar();
     

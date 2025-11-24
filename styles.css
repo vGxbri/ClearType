@@ -13,10 +13,7 @@ body {
     color: white;
 }
 
-/* ===================================
-   GLASSMORPHISM EFFECTS
-   =================================== */
-
+/* Glassmorphism Effects */
 .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
@@ -32,16 +29,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-
-
 input::placeholder, textarea::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* ===================================
-   TOAST NOTIFICATIONS
-   =================================== */
-
+/* Toast Notifications */
 #toast-container {
     position: fixed;
     top: 24px;
@@ -110,10 +102,7 @@ input::placeholder, textarea::placeholder {
     line-height: 1.4;
 }
 
-/* ===================================
-   ANIMACIONES Y TRANSICIONES
-   =================================== */
-
+/* Animaciones y Transiciones */
 .view-section {
     display: none;
     opacity: 0;
@@ -126,12 +115,10 @@ input::placeholder, textarea::placeholder {
     animation: fadeIn 0.4s ease-out;
 }
 
-/* Auth usa flex para centrar el formulario */
 #view-auth.active {
     display: flex;
 }
 
-/* Asegurar que auth no bloquee cuando está oculta */
 #view-auth:not(.active) {
     display: none !important;
     pointer-events: none !important;
@@ -143,7 +130,6 @@ input::placeholder, textarea::placeholder {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Auth Card Animation */
 .auth-card {
     animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -153,9 +139,7 @@ input::placeholder, textarea::placeholder {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===================================
-   HEATMAP
-   =================================== */
+/* Heatmap */
 .keyboard-container {
     background: rgba(0, 0, 0, 0.3);
     padding: 2rem;
@@ -185,9 +169,7 @@ input::placeholder, textarea::placeholder {
 .key.error-med { background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: rgba(249, 115, 22, 0.3); }
 .key.error-high { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
 
-/* ===================================
-   UTILIDADES
-   =================================== */
+/* Utilidades */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
@@ -200,53 +182,42 @@ input::placeholder, textarea::placeholder {
 input:checked + .toggle-slider { background-color: var(--color-accent); }
 input:checked + .toggle-slider:before { transform: translateX(20px); }
 
-/* ===================================
-   NAVBAR
-   =================================== */
+/* Navbar */
 .nav-link {
     transition: all 0.3s ease;
-    border: 1px solid transparent; /* Para evitar saltos al añadir borde */
+    border: 1px solid transparent;
 }
 
-/* Estado Activo: Fondo crema, texto verde oscuro */
 .nav-link.active {
-    background: #FFEFB3 !important; /* !important para sobreescribir estilos glass */
+    background: #FFEFB3 !important;
     color: #013E37 !important;
     font-weight: 700;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transform: translateX(4px); /* Pequeño desplazamiento a la derecha */
+    transform: translateX(4px);
     border: 1px solid rgba(255, 239, 179, 0.5);
 }
 
-/* Ajuste para el icono dentro del enlace activo */
 .nav-link.active i {
-    stroke-width: 3px; /* Icono un poco más grueso */
+    stroke-width: 3px;
 }
 
-/* Efecto Hover mejorado para los no activos */
 .nav-link:not(.active):hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(2px);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ===================================
-   SELECTS SIMPLES (VERDE Y AMARILLO)
-   =================================== */
-
+/* Selects Simples */
 select {
-    /* Colores Sólidos de tu Marca */
-    background-color: #013E37 !important; /* Tu verde oscuro */
-    color: #FFEFB3 !important;            /* Tu amarillo crema */
-    border: 1px solid #FFEFB3 !important; /* Borde amarillo para resaltar */
+    background-color: #013E37 !important;
+    color: #FFEFB3 !important;
+    border: 1px solid #FFEFB3 !important;
     
-    /* Forma y Espaciado */
     border-radius: 0.75rem;
     padding: 0.75rem 1rem;
     cursor: pointer;
     outline: none;
 
-    /* Flecha personalizada Amarilla (necesaria para que se vea bien sobre verde) */
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -257,36 +228,28 @@ select {
     padding-right: 2.5rem !important;
 }
 
-/* El menú desplegable también verde y amarillo */
 select option {
     background-color: #013E37;
     color: #FFEFB3;
     padding: 10px;
 }
 
-/* Efecto al hacer clic (Focus) */
 select:focus {
     box-shadow: 0 0 0 2px rgba(255, 239, 179, 0.3) !important;
 }
 
-/* ===================================
-   MEJORAS ANÁLISIS (HEATMAP)
-   =================================== */
-
+/* Mejoras Análisis (Heatmap) */
 .key {
-    /* Diseño tipo Tecla Física */
     box-shadow: 0 4px 0 rgba(0,0,0,0.4), 0 5px 10px rgba(0,0,0,0.2);
     transform: translateY(0);
     border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Efecto 3D al pasar el mouse (opcional, solo visual) */
 .key:hover {
     transform: translateY(2px);
     box-shadow: 0 2px 0 rgba(0,0,0,0.4), 0 3px 5px rgba(0,0,0,0.2);
 }
 
-/* Colores más vibrantes para los errores */
 .key.error-low { 
     background: rgba(250, 204, 21, 0.2) !important; 
     border-color: #facc15 !important;
@@ -306,14 +269,7 @@ select:focus {
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
-/* ===================================
-   PRÁCTICA DE MECANOGRAFÍA (CORREGIDO)
-   =================================== */
-
-/* IMPORTANTE: Quitamos 'font-size' fijo de estas clases.
-   Ahora heredarán el tamaño que definamos en el contenedor padre vía JS.
-*/
-
+/* Práctica de Mecanografía */
 .char-correct {
     color: #10b981; 
 }
@@ -328,50 +284,41 @@ select:focus {
     color: rgba(255, 255, 255, 0.3); 
 }
 
-/* Clase base del caracter actual */
 .char-current {
     color: var(--color-accent);
-    /* Quitamos estilos fijos de borde/fondo aquí para que mande la configuración */
     transition: all 0.1s ease-out;
 }
 
-/* Texto de práctica (Contenedor Padre) */
 .practice-text, #practice-text-display {
-    /* Valores por defecto si falla JS */
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
     font-variant-ligatures: none;
     white-space: pre-wrap;
     word-wrap: break-word;
-    text-align: left; /* Mejor left que justify para código */
+    text-align: left;
     
-    /* Esto permite que los espacios vacíos tengan anchura y se vea el cursor */
     display: block; 
 }
 
-/* ===================================
-   CURSORES PERSONALIZADOS (LÓGICA VISUAL)
-   =================================== */
-
-/* 1. Línea Vertical (Corregido) */
+/* Cursores Personalizados */
+/* 1. Línea Vertical */
 .caret-line .char-current {
-    border-left: 2px solid var(--color-accent); /* CAMBIADO: De border-bottom a border-left */
-    border-bottom: none; /* Aseguramos que no haya linea abajo */
+    border-left: 2px solid var(--color-accent);
+    border-bottom: none;
     background: transparent;
     border-radius: 0;
     
-    /* Ajuste fino para que no se pegue demasiado a la letra anterior */
     margin-left: -1px; 
 }
 
 /* 2. Bloque Sólido */
 .caret-block .char-current {
     background-color: var(--color-accent);
-    color: #013E37 !important; /* Invertimos color para contraste */
+    color: #013E37 !important;
     border-bottom: none;
     border-radius: 2px;
 }
 
-/* 3. Subguión (Más grueso que línea) */
+/* 3. Subguión */
 .caret-underscore .char-current {
     border-bottom: 4px solid var(--color-accent);
     background: transparent;
@@ -384,16 +331,12 @@ select:focus {
     border-radius: 3px;
 }
 
-/* ===================================
-   EFECTOS VISUALES (FLASH OVERLAY)
-   =================================== */
-
+/* Efectos Visuales */
 #flash-effect-overlay {
-    background-color: rgba(239, 68, 68, 0.4); /* Rojo intenso pero transparente */
+    background-color: rgba(239, 68, 68, 0.4);
     transition: opacity 0.1s ease-out;
 }
 
-/* Clase que activa el flash */
 .flash-active {
     opacity: 1 !important;
 }

@@ -21,7 +21,7 @@
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
-    <!-- Chart.js para gráficas -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <!-- jQuery CDN -->
@@ -30,11 +30,11 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- CSS Personalizado -->
+    <!-- CSS -->
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="min-h-screen overflow-x-hidden">
-    <!-- Botón Hamburguesa para móvil -->
+    <!-- Botón Hamburguesa -->
     <button
       id="sidebar-toggle"
       class="fixed top-4 left-4 z-[60] lg:hidden p-3 rounded-xl text-white"
@@ -43,16 +43,14 @@
       <i data-feather="menu" class="w-6 h-6" style="color: #013e37"></i>
     </button>
 
-    <!-- Overlay para cerrar sidebar en móvil -->
+    <!-- Overlay -->
     <div
       id="sidebar-overlay"
       class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"
     ></div>
 
     <div class="flex min-h-screen">
-      <!-- ===================================
-             SIDEBAR DE NAVEGACIÓN
-             =================================== -->
+      <!-- Sidebar -->
       <aside
         id="sidebar"
         class="glass fixed left-0 top-0 z-50 h-screen p-8 border-r border-white/20 transition-all duration-300 -translate-x-full lg:translate-x-0 w-full lg:w-[20%] flex flex-col"
@@ -129,7 +127,7 @@
           </ul>
         </nav>
 
-        <!-- Usuario y Logout -->
+        <!-- Usuario -->
         <div class="p-4 border-t border-white/10">
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
@@ -158,15 +156,11 @@
         </div>
       </aside>
 
-      <!-- ===================================
-             CONTENIDO PRINCIPAL
-             =================================== -->
-      <main
+      <!-- Contenido Principal -->
+      <
         class="flex-1 p-8 w-full lg:w-[80%] lg:ml-[20%] transition-all duration-300"
       >
-        <!-- ===================================
-                 VISTA: DASHBOARD
-                 =================================== -->
+        <!-- Dashboard -->
         <section id="view-dashboard" class="view-section">
           <h1
             class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
@@ -383,9 +377,7 @@
           </div>
         </section>
 
-        <!-- ===================================
-                 VISTA: ZONA DE PRÁCTICA
-                 =================================== -->
+        <!-- Zona de Práctica -->
         <section id="view-practice" class="view-section">
           <h1
             class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
@@ -513,8 +505,6 @@
                 <!-- Se llenará dinámicamente -->
               </div>
             </div>
-
-            <!-- Input eliminado, se usa captura global -->
           </div>
 
           <!-- Controles -->
@@ -703,9 +693,7 @@
           </div>
         </section>
 
-        <!-- ===================================
-                 VISTA: GESTIÓN DE TEXTOS (ADMIN)
-                 =================================== -->
+        <!-- Gestión de Textos (Admin) -->
         <section id="view-admin" class="view-section">
           <div
             class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4"
@@ -906,9 +894,7 @@
           </div>
         </section>
 
-        <!-- ===================================
-                 VISTA: ANÁLISIS DE ERRORES
-                 =================================== -->
+        <!-- Vista Análisis de Rendimiento -->
         <section id="view-analysis" class="view-section">
           <div class="flex justify-between items-end mb-8">
             <div>
@@ -1042,9 +1028,7 @@
           </div>
         </section>
 
-        <!-- ===================================
-                 VISTA: CONFIGURACIÓN
-                 =================================== -->
+        <!-- Vista Ajustes -->
         <section id="view-settings" class="view-section">
           <div class="flex justify-between items-end mb-8">
             <div>
@@ -1359,9 +1343,7 @@
       </div>
     </div>
 
-    <!-- ===================================
-                 VISTA: AUTENTICACIÓN
-                 =================================== -->
+    <!-- Vista Autenticación -->
     <section
       id="view-auth"
       class="view-section active w-full h-screen fixed inset-0 z-[100] flex items-center justify-center p-4"
@@ -1372,7 +1354,6 @@
       <div
         class="glass auth-card p-8 md:p-10 rounded-3xl w-full max-w-md relative overflow-hidden shadow-2xl"
       >
-        <!-- Decoración de fondo -->
         <div
           class="absolute -top-24 -right-24 w-64 h-64 bg-[#FFEFB3] rounded-full blur-[100px] opacity-20"
         ></div>

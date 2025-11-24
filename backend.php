@@ -57,9 +57,7 @@ $accion = isset($_POST['action']) ? $_POST['action'] : '';
 // Switch para manejar acciones
 switch ($accion) {
     
-    // ============================================
-    // AUTENTICACIÓN
-    // ============================================
+    // Autenticación
     
     case 'register':
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -140,9 +138,7 @@ switch ($accion) {
         }
         break;
 
-    // ============================================
-    // OPERACIONES DE TEXTOS (Públicos para todos)
-    // ============================================
+    // Operaciones de Textos (Públicos)
     
     case 'read':
         $datos = leerDatos($archivoTextos);
@@ -358,9 +354,7 @@ switch ($accion) {
         ]);
         break;
     
-    // ============================================
-    // OPERACIONES DE RESULTADOS (Privados por Usuario)
-    // ============================================
+    // Operaciones de Resultados (Privados)
     
     case 'save_result':
         $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
@@ -388,7 +382,6 @@ switch ($accion) {
         $resultados[] = $resultado;
         
         // Limpieza opcional: mantener solo los últimos X resultados globales o por usuario
-        // Por simplicidad, guardamos todo por ahora
         
         if (guardarDatos($archivoResultados, $resultados)) {
             echo json_encode([
@@ -538,9 +531,7 @@ switch ($accion) {
         }
         break;
     
-    // ============================================
-    // IMPORTACIÓN DE DATOS
-    // ============================================
+    // Importación de Datos
     
     case 'import_data':
         $jsonData = isset($_POST['jsonData']) ? $_POST['jsonData'] : '';
@@ -616,7 +607,6 @@ switch ($accion) {
         
         foreach ($usuarios as &$user) {
             if ($user['id'] === $userId) {
-                // Guardamos la configuración dentro del objeto del usuario
                 $user['config'] = $config;
                 $encontrado = true;
                 break;
