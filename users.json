@@ -3,6 +3,19 @@
         "id": "user_69244d6067839",
         "username": "Gxbri",
         "password_hash": "$2y$10$qS97tf0jEUEvLHpsSR3YG.928TsKlPvao8TJkLMrVkr69VPevwJBi",
-        "created_at": "2025-11-24 13:19:44"
+        "created_at": "2025-11-24 13:19:44",
+        "config": {
+            "fontFamily": "monospace",
+            "fontSize": "2",
+            "lineHeight": "1.4",
+            "caretStyle": "line",
+            "sounds": true,
+            "errorEffects": true,
+            "suddenDeath": false,
+            "stopOnError": false,
+            "timeLimit": true,
+            "timeValue": 5,
+            "showCurrent": true
+        }
     }
 ]

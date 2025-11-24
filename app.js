@@ -23,12 +23,16 @@ $(document).ready(function() {
     };
     
     let configuracion = {
-        largeFont: false,
-        lineHeight: '2',
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: '2',
+        caretStyle: 'line',                       
+        lineHeight: '1.4',
         sounds: false,
         errorEffects: true,
+        suddenDeath: false,                       
+        stopOnError: false,                       
         timeLimit: false,
-        timeValue: 5,
+        timeValue: 1,
         showCurrent: true
     };
     
@@ -37,12 +41,25 @@ $(document).ready(function() {
     let todosLosTextos = [];
     let todosLosResultados = [];
     
+    let inputBloqueado = false;
+    
     // Variables para las instancias de gráficas Chart.js
     let chartWpm = null;
     let chartAccuracy = null;
     
     // Usuario actual
     let currentUser = null;
+
+    // ============================================
+    // RECURSOS DE AUDIO (Base64 para no depender de archivos externos)
+    // ============================================
+    // Sonido "Click" mecánico suave
+    const soundClick = new Audio("data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAEA//8BAAAAAAAA//8="); 
+    // (Nota: Este es un placeholder de silencio para evitar errores si no quieres un sonido real largo aquí. 
+    // Para un click real, usa un archivo .mp3 corto o este hack simple de oscilador abajo)
+    
+    // Mejor usamos la API de Audio del navegador para generar sonidos sintéticos sin cargar archivos
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     
     // ============================================
     // INICIALIZACIÓN
@@ -153,9 +170,17 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     currentUser = response.user;
                     localStorage.setItem('cleartype_user', JSON.stringify(currentUser));
+                    
+                    // --- AÑADIR ESTO ---
+                    if (currentUser.config) {
+                        configuracion = { ...configuracion, ...currentUser.config };
+                        // Guardar copia local también para acceso rápido
+                        localStorage.setItem(`cleartype_config_${currentUser.id}`, JSON.stringify(configuracion));
+                    }
+                    // -------------------
+                    
                     mostrarAlerta('Bienvenido, ' + currentUser.username, 'success');
                     
-                    // Recargar la página para inicializar
                     setTimeout(() => {
                         location.reload();
                     }, 500);
@@ -459,7 +484,7 @@ $(document).ready(function() {
         }
         
         let correctos = 0;
-        let errores = 0;
+        let erroresVisuales = 0; // Solo para cálculo de precisión visual actual
         
         const selector = esPersonalizado ? '#custom-preview .practice-text span' : '#practice-text-display span';
         
@@ -472,14 +497,11 @@ $(document).ready(function() {
                     correctos++;
                 } else {
                     $char.removeClass('char-pending char-correct char-current').addClass('char-error');
-                    $char.removeClass('char-pending char-correct char-current').addClass('char-error');
-                    errores++;
+                    erroresVisuales++;
                     
-                    // Registrar error específico
-                    const charEsperado = textoOriginal[index];
-                    if (charEsperado) {
-                        estadisticasActuales.teclasErrores[charEsperado] = (estadisticasActuales.teclasErrores[charEsperado] || 0) + 1;
-                    }
+                    // --- CORRECCIÓN ---
+                    // AQUÍ ESTABA EL ERROR: Hemos quitado la suma a 'teclasErrores' de este bucle.
+                    // Ahora solo gestionamos el aspecto visual.
                 }
             } else if (index === textoEscrito.length && configuracion.showCurrent) {
                 $char.removeClass('char-pending char-correct char-error').addClass('char-current');
@@ -489,14 +511,17 @@ $(document).ready(function() {
         });
         
         estadisticasActuales.correctos = correctos;
-        estadisticasActuales.errores = errores;
+        // Nota: estadisticasActuales.errores ahora acumulará los errores reales capturados en el keydown,
+        // o puedes igualarlo a erroresVisuales si prefieres que la precisión suba si corrigen el texto (cuando implementes borrar).
+        // Por ahora, para mantener coherencia con tu sistema "sin borrar", usamos el acumulador visual:
+        estadisticasActuales.errores = erroresVisuales;
         
         const totalEscritos = textoEscrito.length;
         const precision = totalEscritos > 0 ? ((correctos / totalEscritos) * 100).toFixed(1) : 100;
         
         const statPrefix = esPersonalizado ? '#custom' : '#practice';
         $(`${statPrefix}-accuracy`).text(precision + '%');
-        $(`${statPrefix}-errors`).text(errores);
+        $(`${statPrefix}-errors`).text(estadisticasActuales.errores);
         
         estadisticasActuales.precision = parseFloat(precision);
         
@@ -562,6 +587,8 @@ $(document).ready(function() {
     function resetearEstadisticas() {
         tiempoInicio = null;
         clearInterval(intervaloTimer);
+        
+        inputBloqueado = false;
         
         estadisticasActuales = {
             wpm: 0,
@@ -1011,15 +1038,16 @@ $(document).ready(function() {
     // ANÁLISIS DE ERRORES
     // ============================================
     
+    // ============================================
+    // ANÁLISIS DE ERRORES (MEJORADO)
+    // ============================================
+    
     function cargarAnalisisErrores() {
-        const $container = $('#error-keys-container');
         const $heatmapContainer = $('#heatmap-container');
-        const $suggestionsContainer = $('#suggestions-container');
+        const $topErrorsContainer = $('#top-errors-visual');
         
         if (todosLosResultados.length === 0) {
-            $container.html('<p class="text-white/60 text-center">Realiza prácticas para ver estadísticas</p>');
-            $heatmapContainer.html('<p class="text-white/60 text-center">Realiza prácticas para ver el mapa de calor</p>');
-            $suggestionsContainer.html('<p class="text-white/60 text-center">Completa más prácticas para recibir sugerencias</p>');
+            $heatmapContainer.html('<div class="py-12 text-white/40 italic">Necesitas completar al menos una práctica</div>');
             return;
         }
         
@@ -1029,7 +1057,6 @@ $(document).ready(function() {
         
         todosLosResultados.forEach(resultado => {
             if (resultado.teclasErrores) {
-                // Soporte para formato objeto (nuevo) o array (si hubiera legacy)
                 const errores = typeof resultado.teclasErrores === 'string' 
                     ? JSON.parse(resultado.teclasErrores) 
                     : resultado.teclasErrores;
@@ -1042,48 +1069,117 @@ $(document).ready(function() {
                 }
             }
         });
+
+        // Si no hay errores (eres perfecto), mostrar mensaje
+        if (totalErroresRegistrados === 0) {
+            $topErrorsContainer.html('<div class="w-full text-center py-8"><i data-feather="award" class="w-12 h-12 text-[#FFEFB3] mx-auto mb-3"></i><p class="text-[#FFEFB3] font-bold">¡Impecable!</p><p class="text-sm text-white/60">No has cometido errores aún.</p></div>');
+            renderizarBalanceManos(0, 0); // Resetear barras
+            feather.replace();
+            return;
+        }
         
-        // 2. Renderizar Top Errores
+        // 2. Renderizar Top 3 Errores
         const erroresOrdenados = Object.entries(mapaErrores)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 5);
+            .slice(0, 3);
             
-        if (erroresOrdenados.length > 0) {
-            let htmlErrores = '<div class="space-y-4">';
-            erroresOrdenados.forEach(([key, count]) => {
-                const keyDisplay = key === ' ' ? 'Espacio' : key;
-                const porcentaje = totalErroresRegistrados > 0 ? Math.round((count / totalErroresRegistrados) * 100) : 0;
-                
-                htmlErrores += `
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-bold bg-white/10 text-white border border-white/20">
-                            ${keyDisplay}
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between mb-1">
-                                <span class="text-white font-medium">${count} errores</span>
-                                <span class="text-white/60 text-sm">${porcentaje}% del total</span>
-                            </div>
-                            <div class="w-full bg-black/20 rounded-full h-2">
-                                <div class="bg-red-400 h-2 rounded-full" style="width: ${porcentaje}%"></div>
-                            </div>
-                        </div>
+        let htmlTop = '';
+        erroresOrdenados.forEach(([key, count], index) => {
+            const porcentaje = Math.round((count / totalErroresRegistrados) * 100);
+            const keyDisplay = key === ' ' ? 'Space' : key.toUpperCase();
+            
+            // CONFIGURACIÓN DE COLORES
+            // Usamos 'style' para el fondo para evitar que Tailwind CDN lo ignore.
+            // He subido la opacidad a 0.2 (20%) para que se note más.
+            let theme = {};
+            
+            if (index === 0) {
+                // #1 ROJO
+                theme = { 
+                    classes: 'text-red-400 border-red-500', 
+                    bg: 'rgba(239, 68, 68, 0.2)',  // Color sólido con opacidad manual
+                    shadow: 'shadow-[0_0_15px_rgba(239,68,68,0.2)]' // Resplandor rojo
+                };
+            } else if (index === 1) {
+                // #2 NARANJA
+                theme = { 
+                    classes: 'text-orange-400 border-orange-500', 
+                    bg: 'rgba(249, 115, 22, 0.2)',
+                    shadow: 'shadow-[0_0_15px_rgba(249,115,22,0.2)]'
+                };
+            } else {
+                // #3 AMARILLO
+                theme = { 
+                    classes: 'text-yellow-400 border-yellow-500', 
+                    bg: 'rgba(250, 204, 21, 0.2)',
+                    shadow: 'shadow-[0_0_15px_rgba(250,204,21,0.2)]'
+                };
+            }
+            
+            htmlTop += `
+                <div class="flex flex-col items-center justify-center p-4 rounded-2xl border ${theme.classes} ${theme.shadow} w-1/3 min-w-[100px] transition-transform" style="background-color: ${theme.bg}; border-width: 1px;">
+                    <div class="text-xs font-bold uppercase opacity-80 mb-2 tracking-widest">Top #${index + 1}</div>
+                    <div class="text-5xl font-mono font-bold mb-2 drop-shadow-md">${keyDisplay}</div>
+                    <div class="text-xs font-bold bg-black/40 px-3 py-1 rounded-full text-white/90 border border-white/10">
+                        ${count} fallos
                     </div>
-                `;
-            });
-            htmlErrores += '</div>';
-            $container.html(htmlErrores);
-        } else {
-            $container.html('<p class="text-white/60 text-center">¡Increíble! No se han registrado errores específicos aún.</p>');
-        }
+                </div>
+            `;
+        });
+        $topErrorsContainer.html(htmlTop);
         
         // 3. Renderizar Heatmap
         renderizarHeatmap(mapaErrores, totalErroresRegistrados);
         
-        // 4. Generar Sugerencias
-        generarSugerencias(erroresOrdenados, todosLosResultados);
+        // 4. NUEVO: Calcular Balance de Manos
+        const manoIzquierda = ['q','w','e','r','t','a','s','d','f','g','z','x','c','v','b'];
+        // Todo lo demás se asume derecha (incluyendo signos comunes por simplicidad visual)
+        
+        let erroresIzq = 0;
+        let erroresDer = 0;
+        
+        Object.keys(mapaErrores).forEach(k => {
+            if (k === ' ') return; // Ignorar espacio para el balance lateral
+            if (manoIzquierda.includes(k.toLowerCase())) {
+                erroresIzq += mapaErrores[k];
+            } else {
+                erroresDer += mapaErrores[k];
+            }
+        });
+        
+        renderizarBalanceManos(erroresIzq, erroresDer);
         
         feather.replace();
+    }
+    
+    function renderizarBalanceManos(izq, der) {
+        const total = izq + der;
+        let pctIzq = 0;
+        let pctDer = 0;
+        
+        if (total > 0) {
+            pctIzq = Math.round((izq / total) * 100);
+            pctDer = 100 - pctIzq;
+        }
+        
+        // Actualizar UI con animación
+        $('#left-hand-bar').css('width', `${pctIzq}%`);
+        $('#right-hand-bar').css('width', `${pctDer}%`);
+        
+        $('#left-hand-pct').text(`${pctIzq}%`);
+        $('#right-hand-pct').text(`${pctDer}%`);
+        
+        // Veredicto
+        const $verdict = $('#hand-verdict');
+        if (total === 0) {
+            $verdict.text('Datos insuficientes');
+        } else if (Math.abs(pctIzq - pctDer) < 10) {
+            $verdict.html('<span class="text-green-400">¡Equilibrado!</span> Tienes buen balance.');
+        } else if (pctIzq > pctDer) {
+            $verdict.html('Tu mano <strong class="text-red-400">IZQUIERDA</strong> necesita más práctica.');
+        } else {
+            $verdict.html('Tu mano <strong class="text-blue-400">DERECHA</strong> necesita más práctica.');
+        }
     }
     
     function renderizarHeatmap(mapaErrores, total) {
@@ -1132,16 +1228,7 @@ $(document).ready(function() {
         `;
         
         html += '</div>';
-        
-        // Leyenda
-        html += `
-            <div class="flex justify-center gap-6 mt-8 text-sm text-white/70">
-                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-white/5 border border-white/10"></div> Sin errores</div>
-                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-yellow-400/40 border border-yellow-400/60"></div> Pocos</div>
-                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-orange-500/40 border border-orange-500/60"></div> Frecuentes</div>
-                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-red-500/40 border border-red-500/60"></div> Críticos</div>
-            </div>
-        `;
+    
         
         $('#heatmap-container').html(html);
     }
@@ -1227,46 +1314,143 @@ $(document).ready(function() {
     // ============================================
     
     function cargarConfiguracion() {
-        const configKey = currentUser ? `cleartype_config_${currentUser.id}` : 'cleartype_config';
-        const configGuardada = localStorage.getItem(configKey);
-        if (configGuardada) {
-            configuracion = JSON.parse(configGuardada);
+        let configCargada = null;
+
+        // Prioridad 1: Configuración que viene del objeto usuario (Backend)
+        if (currentUser && currentUser.config) {
+            configCargada = currentUser.config;
+        } 
+        // Prioridad 2: LocalStorage específico del usuario
+        else if (currentUser) {
+            const configKey = `cleartype_config_${currentUser.id}`;
+            const stored = localStorage.getItem(configKey);
+            if (stored) configCargada = JSON.parse(stored);
+        }
+        // Prioridad 3: Configuración genérica (usuario invitado)
+        else {
+            const stored = localStorage.getItem('cleartype_config');
+            if (stored) configCargada = JSON.parse(stored);
+        }
+
+        // Si encontramos configuración, la mezclamos con los defaults para asegurar compatibilidad
+        if (configCargada) {
+            configuracion = { ...configuracion, ...configCargada };
         }
     }
     
     function guardarConfiguracion() {
+        // 1. Recoger valores del DOM
         configuracion = {
-            largeFont: $('#setting-large-font').is(':checked'),
+            fontFamily: $('#setting-font-family').val(),
+            fontSize: $('#setting-font-size').val(),
             lineHeight: $('#setting-line-height').val(),
+            caretStyle: $('#setting-caret-style').val(),
+            
             sounds: $('#setting-sounds').is(':checked'),
             errorEffects: $('#setting-error-effects').is(':checked'),
+            suddenDeath: $('#setting-sudden-death').is(':checked'),
+            stopOnError: $('#setting-stop-on-error').is(':checked'),
+            
             timeLimit: $('#setting-time-limit').is(':checked'),
-            timeValue: parseInt($('#setting-time-value').val()) || 5,
+            timeValue: parseInt($('#setting-time-value').val()) || 1,
             showCurrent: $('#setting-show-current').is(':checked')
         };
         
+        // 2. Guardar en LocalStorage (Copia local inmediata)
         const configKey = currentUser ? `cleartype_config_${currentUser.id}` : 'cleartype_config';
         localStorage.setItem(configKey, JSON.stringify(configuracion));
+        
+        // 3. Guardar en Backend (Persistencia por usuario)
+        if (currentUser) {
+            // Actualizamos también el objeto currentUser en memoria local para mantener sincronía
+            currentUser.config = configuracion;
+            localStorage.setItem('cleartype_user', JSON.stringify(currentUser));
+            
+            // Enviamos al servidor
+            const $btn = $('#btn-save-settings');
+            const originalText = $btn.html();
+            $btn.html('<i data-feather="loader" class="animate-spin w-4 h-4"></i> Guardando...');
+            feather.replace();
+            
+            $.ajax({
+                url: 'backend.php',
+                type: 'POST',
+                data: {
+                    action: 'update_settings',
+                    userId: currentUser.id,
+                    config: JSON.stringify(configuracion)
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        mostrarAlerta('Configuración sincronizada con tu cuenta', 'success');
+                    } else {
+                        mostrarAlerta('Guardado localmente (Error en servidor: ' + response.message + ')', 'warning');
+                    }
+                },
+                error: function() {
+                    mostrarAlerta('Guardado localmente (Sin conexión al servidor)', 'info');
+                },
+                complete: function() {
+                    $btn.html(originalText);
+                    feather.replace();
+                }
+            });
+        } else {
+            mostrarAlerta('Configuración guardada (Solo en este dispositivo)', 'info');
+        }
+
         aplicarConfiguracion();
-        mostrarAlerta('Configuración guardada', 'success');
     }
     
     function aplicarConfiguracion() {
-        // Aplicar configuración visual
-        const fontSize = configuracion.largeFont ? '10rem' : '8rem';
-        $('.practice-text').css('font-size', fontSize);
-        $('.practice-text').css('line-height', configuracion.lineHeight);
+        // Seleccionamos ambos contenedores (Práctica normal y Personalizada)
+        const $textContainer = $('#practice-text-display, .practice-text');
         
-        // Aplicar a controles
-        $('#setting-large-font').prop('checked', configuracion.largeFont);
+        // 1. Aplicar Estilos Visuales
+        // Nota: line-height va sin unidad para ser proporcional al tamaño de fuente
+        $textContainer.css({
+            'font-family': configuracion.fontFamily,
+            'font-size': configuracion.fontSize + 'rem',
+            'line-height': configuracion.lineHeight,
+            'transition': 'font-size 0.3s ease, line-height 0.3s ease'
+        });
+        
+        // 2. Aplicar Estilo de Cursor
+        // Eliminamos todas las clases posibles de cursor antes de añadir la nueva
+        $textContainer.removeClass('caret-line caret-block caret-underscore caret-outline');
+        $textContainer.addClass('caret-' + configuracion.caretStyle);
+
+        // 3. Sincronizar Inputs del Panel (UI)
+        // Esto sirve para que si recargas la página, los controles reflejen la realidad
+        $('#setting-font-family').val(configuracion.fontFamily);
+        
+        $('#setting-font-size').val(configuracion.fontSize);
+        $('#font-size-value').text(configuracion.fontSize + 'rem');
+        
         $('#setting-line-height').val(configuracion.lineHeight);
+        $('#line-height-value').text(configuracion.lineHeight);
+        
+        $('#setting-caret-style').val(configuracion.caretStyle);
+
+        // Checkboxes
         $('#setting-sounds').prop('checked', configuracion.sounds);
         $('#setting-error-effects').prop('checked', configuracion.errorEffects);
+        $('#setting-sudden-death').prop('checked', configuracion.suddenDeath);
+        $('#setting-stop-on-error').prop('checked', configuracion.stopOnError);
         $('#setting-time-limit').prop('checked', configuracion.timeLimit);
         $('#setting-time-value').val(configuracion.timeValue);
         $('#setting-show-current').prop('checked', configuracion.showCurrent);
         
         $('#time-limit-input').toggle(configuracion.timeLimit);
+        
+        // CORRECCIÓN: Forzamos el redibujado visual para que "Resaltar Actual" 
+        // se aplique inmediatamente si estamos en medio de una práctica.
+        const isCustomView = $('#view-custom-practice').hasClass('active');
+        // Llamamos a compararTexto para que re-calcule las clases CSS (char-current)
+        if (textoActual || textosPracticaPersonalizada) {
+            compararTexto(isCustomView); 
+        }
     }
     
     function restaurarConfiguracion() {
@@ -1531,38 +1715,97 @@ $(document).ready(function() {
             navegarAVista(vista);
         });
         
+        // Actualización en tiempo real de sliders de configuración
+        $('#setting-font-size').on('input', function() {
+            $('#font-size-value').text($(this).val() + 'rem');
+        });
+        $('#setting-line-height').on('input', function() {
+            $('#line-height-value').text($(this).val());
+        });
+
         // Práctica
         $('#btn-load-random, #btn-practice-new').on('click', cargarTextoAleatorio);
         $('#btn-practice-restart').on('click', mostrarTextoPractica);
         
-        // Listener Global de Teclado
-        $(document).on('keydown', function(e) {
-            // Verificar si estamos en una vista de práctica
+       $(document).on('keydown', function(e) {
             const isPracticeView = $('#view-practice').hasClass('active');
             const isCustomView = $('#view-custom-practice').hasClass('active');
             
             if (!isPracticeView && !isCustomView) return;
-            
-            // Ignorar si el foco está en un input o textarea (ej: filtros, admin, etc)
+            if (inputBloqueado) { e.preventDefault(); return; }
             if ($(e.target).is('input, textarea, select')) return;
-            
-            // Ignorar teclas de control
             if (e.ctrlKey || e.altKey || e.metaKey) return;
             
-            // Manejar teclas imprimibles (longitud 1)
             if (e.key.length === 1) {
-                e.preventDefault(); // Evitar scroll con espacio, etc.
+                e.preventDefault();
                 
-                // Limite de longitud para no escribir infinitamente
                 const textoOriginal = isCustomView ? textosPracticaPersonalizada : (textoActual ? textoActual.texto : '');
                 
                 if (textoOriginal && bufferTexto.length < textoOriginal.length) {
+                    
+                    const indexActual = bufferTexto.length;
+                    const charEsperado = textoOriginal[indexActual];
+                    const esError = e.key !== charEsperado;
+
+                    // 1. EFECTOS DE ERROR
+                    if (esError) {
+                        // A. Sonido de Error
+                        if (configuracion.sounds) playErrorSound();
+
+                        // B. Efecto Visual (Flash Rojo)
+                        if (configuracion.errorEffects) {
+                            const $overlay = $('#flash-effect-overlay');
+                            // Forzamos un reflow quitando la clase primero si existía (para flashes rápidos seguidos)
+                            $overlay.removeClass('flash-active');
+                            
+                            // Pequeño hack para forzar al navegador a procesar el cambio
+                            void $overlay[0].offsetWidth; 
+                            
+                            $overlay.addClass('flash-active');
+                            
+                            // Quitar el flash después de 150ms
+                            setTimeout(() => {
+                                $overlay.removeClass('flash-active');
+                            }, 150);
+                        }
+
+                        // C. Lógica de Bloqueo / Estadísticas
+                        if (configuracion.stopOnError) {
+                            const selector = isCustomView ? '#custom-preview .practice-text span' : '#practice-text-display span';
+                            const $char = $(selector).eq(indexActual);
+                            $char.addClass('char-error');
+                            setTimeout(() => $char.removeClass('char-error'), 200);
+                            
+                            if (charEsperado) estadisticasActuales.teclasErrores[charEsperado] = (estadisticasActuales.teclasErrores[charEsperado] || 0) + 1;
+                            
+                            if (configuracion.suddenDeath) {
+                                inputBloqueado = true;
+                                finalizarPractica(isCustomView);
+                                mostrarAlerta('💀 Muerte Súbita: Juego terminado', 'error');
+                            }
+                            return; 
+                        }
+
+                        if (charEsperado) estadisticasActuales.teclasErrores[charEsperado] = (estadisticasActuales.teclasErrores[charEsperado] || 0) + 1;
+                        
+                        if (configuracion.suddenDeath) {
+                            inputBloqueado = true;
+                            finalizarPractica(isCustomView);
+                            mostrarAlerta('💀 Muerte Súbita: Juego terminado', 'error');
+                            return;
+                        }
+                    } 
+                    // 2. SONIDO DE ÉXITO (Click Mecánico)
+                    else {
+                        if (configuracion.sounds) playMechanicalClick();
+                    }
+
                     bufferTexto += e.key;
                     compararTexto(isCustomView);
                 }
             }
         });
-        
+
         // Filtros de práctica
         $('#filter-nivel, #filter-categoria').on('change', cargarTextoAleatorio);
         
@@ -1729,6 +1972,7 @@ $(document).ready(function() {
         
         $('#btn-modal-new').on('click', function() {
             $('#results-modal').addClass('hidden').removeClass('flex');
+            inputBloqueado = false;
             cargarTextoAleatorio();
         });
         
@@ -1737,6 +1981,58 @@ $(document).ready(function() {
                 $(this).addClass('hidden').removeClass('flex');
             }
         });
+    }
+
+    // ============================================
+    // RECURSOS DE AUDIO
+    // ============================================
+
+    // Función para "despertar" el audio (necesario en Chrome/Edge)
+    function resumeAudioContext() {
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+    }
+
+    function playMechanicalClick() {
+        resumeAudioContext(); // Intentar despertar siempre
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        // Tono más agudo y corto (tipo switch Cherry Blue)
+        oscillator.type = 'triangle'; 
+        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.03);
+        
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.03);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.04);
+    }
+
+    function playErrorSound() {
+        resumeAudioContext();
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.type = 'sawtooth'; 
+        oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+        oscillator.frequency.linearRampToValueAtTime(100, audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.15);
     }
     
     // ============================================

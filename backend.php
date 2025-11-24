@@ -119,13 +119,21 @@ switch ($accion) {
         }
         
         if ($usuarioEncontrado && password_verify($password, $usuarioEncontrado['password_hash'])) {
+            // Preparamos los datos del usuario para enviar (sin el hash de la contraseña)
+            $userData = [
+                'id' => $usuarioEncontrado['id'],
+                'username' => $usuarioEncontrado['username']
+            ];
+            
+            // Si tiene configuración guardada, la añadimos
+            if (isset($usuarioEncontrado['config'])) {
+                $userData['config'] = $usuarioEncontrado['config'];
+            }
+            
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login exitoso',
-                'user' => [
-                    'id' => $usuarioEncontrado['id'],
-                    'username' => $usuarioEncontrado['username']
-                ]
+                'user' => $userData
             ]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Credenciales inválidas']);
@@ -585,6 +593,47 @@ switch ($accion) {
                 'status' => 'error',
                 'message' => 'Error al guardar los datos importados'
             ]);
+        }
+        break;
+
+    case 'update_settings':
+        $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+        $configJson = isset($_POST['config']) ? $_POST['config'] : '';
+        
+        if (empty($userId) || empty($configJson)) {
+            echo json_encode(['status' => 'error', 'message' => 'Faltan datos']);
+            break;
+        }
+        
+        $config = json_decode($configJson, true);
+        if (!$config) {
+            echo json_encode(['status' => 'error', 'message' => 'JSON de configuración inválido']);
+            break;
+        }
+        
+        $usuarios = leerDatos($archivoUsuarios);
+        $encontrado = false;
+        
+        foreach ($usuarios as &$user) {
+            if ($user['id'] === $userId) {
+                // Guardamos la configuración dentro del objeto del usuario
+                $user['config'] = $config;
+                $encontrado = true;
+                break;
+            }
+        }
+        
+        if ($encontrado) {
+            if (guardarDatos($archivoUsuarios, $usuarios)) {
+                echo json_encode([
+                    'status' => 'success', 
+                    'message' => 'Configuración guardada en tu cuenta'
+                ]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Error al escribir en users.json']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no encontrado']);
         }
         break;
     

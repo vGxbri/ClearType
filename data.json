@@ -1,74 +1,110 @@
 [
-  {
-    "id": 1732369956001,
-    "titulo": "Pangrama Clásico Español",
-    "texto": "El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja.",
-    "nivel": "principiante",
-    "categoria": "pangramas",
-    "palabrasClave": ["básico", "español", "letras"]
-  },
-  {
-    "id": 1732369956002,
-    "titulo": "Programación Web Moderna",
-    "texto": "JavaScript es un lenguaje de programación versátil que permite crear aplicaciones web interactivas y dinámicas en el navegador. El desarrollo frontend combina HTML para estructura, CSS para diseño y JavaScript para interactividad.",
-    "nivel": "intermedio",
-    "categoria": "tecnologia",
-    "palabrasClave": ["programación", "web", "javascript"]
-  },
-  {
-    "id": 1732369956003,
-    "titulo": "Frase Motivacional",
-    "texto": "La práctica hace al maestro. Cada tecla que presionas es un paso más hacia la perfección en mecanografía.",
-    "nivel": "principiante",
-    "categoria": "motivacion",
-    "palabrasClave": ["inspiración", "práctica", "superación"]
-  },
-  {
-    "id": 1732369956004,
-    "titulo": "Literatura Clásica",
-    "texto": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.",
-    "nivel": "avanzado",
-    "categoria": "literatura",
-    "palabrasClave": ["cervantes", "quijote", "clásico"]
-  },
-  {
-    "id": 1732369956005,
-    "titulo": "Comunicación Empresarial",
-    "texto": "Estimados señores, nos dirigimos a ustedes con el propósito de establecer una colaboración mutuamente beneficiosa que permita optimizar los procesos de negocio y alcanzar objetivos estratégicos compartidos.",
-    "nivel": "avanzado",
-    "categoria": "negocios",
-    "palabrasClave": ["formal", "empresa", "comunicación"]
-  },
-  {
-    "id": 1732369956006,
-    "titulo": "Programación Avanzada",
-    "texto": "La arquitectura de microservicios permite desarrollar aplicaciones escalables mediante la descomposición en servicios independientes que se comunican a través de APIs RESTful. Cada servicio mantiene su propia base de datos y puede desplegarse de forma autónoma.",
-    "nivel": "experto",
-    "categoria": "tecnologia",
-    "palabrasClave": ["arquitectura", "backend", "microservicios"]
-  },
-  {
-    "id": 1732369956007,
-    "titulo": "Práctica de Números",
-    "texto": "El año 2024 marcará un antes y después. Las proyecciones indican un crecimiento del 15.7% en el sector tecnológico, alcanzando los 3,500,000 millones de dólares en inversión durante el primer trimestre.",
-    "nivel": "intermedio",
-    "categoria": "numeros",
-    "palabrasClave": ["números", "estadísticas", "datos"]
-  },
-  {
-    "id": 1732369956008,
-    "titulo": "Ciencia y Naturaleza",
-    "texto": "La fotosíntesis es el proceso mediante el cual las plantas convierten la luz solar en energía química, utilizando dióxido de carbono y agua para producir glucosa y oxígeno. Este proceso es esencial para la vida en la Tierra.",
-    "nivel": "intermedio",
-    "categoria": "ciencia",
-    "palabrasClave": ["biología", "naturaleza", "educación"]
-  },
-  {
-    "id": 1732369956010,
-    "titulo": "Velocidad Corta",
-    "texto": "Rapidez y precisión son las claves del éxito.",
-    "nivel": "principiante",
-    "categoria": "motivacion",
-    "palabrasClave": ["corto", "rápido", "básico"]
-  }
+    {
+        "id": 1732369956001,
+        "titulo": "Pangrama Clásico Español",
+        "texto": "El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja.",
+        "nivel": "principiante",
+        "categoria": "pangramas",
+        "palabrasClave": [
+            "básico",
+            "español",
+            "letras"
+        ]
+    },
+    {
+        "id": 1732369956002,
+        "titulo": "Programación Web Moderna",
+        "texto": "JavaScript es un lenguaje de programación versátil que permite crear aplicaciones web interactivas y dinámicas en el navegador. El desarrollo frontend combina HTML para estructura, CSS para diseño y JavaScript para interactividad.",
+        "nivel": "intermedio",
+        "categoria": "tecnologia",
+        "palabrasClave": [
+            "programación",
+            "web",
+            "javascript"
+        ]
+    },
+    {
+        "id": 1732369956003,
+        "titulo": "Frase Motivacional",
+        "texto": "La práctica hace al maestro. Cada tecla que presionas es un paso más hacia la perfección en mecanografía.",
+        "nivel": "principiante",
+        "categoria": "motivacion",
+        "palabrasClave": [
+            "inspiración",
+            "práctica",
+            "superación"
+        ]
+    },
+    {
+        "id": 1732369956004,
+        "titulo": "Literatura Clásica",
+        "texto": "En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor.",
+        "nivel": "avanzado",
+        "categoria": "literatura",
+        "palabrasClave": [
+            "cervantes",
+            "quijote",
+            "clásico"
+        ]
+    },
+    {
+        "id": 1732369956005,
+        "titulo": "Comunicación Empresarial",
+        "texto": "Estimados señores, nos dirigimos a ustedes con el propósito de establecer una colaboración mutuamente beneficiosa que permita optimizar los procesos de negocio y alcanzar objetivos estratégicos compartidos.",
+        "nivel": "avanzado",
+        "categoria": "negocios",
+        "palabrasClave": [
+            "formal",
+            "empresa",
+            "comunicación"
+        ]
+    },
+    {
+        "id": 1732369956006,
+        "titulo": "Programación Avanzada",
+        "texto": "La arquitectura de microservicios permite desarrollar aplicaciones escalables mediante la descomposición en servicios independientes que se comunican a través de APIs RESTful. Cada servicio mantiene su propia base de datos y puede desplegarse de forma autónoma.",
+        "nivel": "experto",
+        "categoria": "tecnologia",
+        "palabrasClave": [
+            "arquitectura",
+            "backend",
+            "microservicios"
+        ]
+    },
+    {
+        "id": 1732369956007,
+        "titulo": "Práctica de Números",
+        "texto": "El año 2024 marcará un antes y después. Las proyecciones indican un crecimiento del 15.7% en el sector tecnológico, alcanzando los 3,500,000 millones de dólares en inversión durante el primer trimestre...",
+        "nivel": "intermedio",
+        "categoria": "numeros",
+        "palabrasClave": [
+            "números",
+            "estadísticas",
+            "datos"
+        ]
+    },
+    {
+        "id": 1732369956008,
+        "titulo": "Ciencia y Naturaleza",
+        "texto": "La fotosíntesis es el proceso mediante el cual las plantas convierten la luz solar en energía química, utilizando dióxido de carbono y agua para producir glucosa y oxígeno. Este proceso es esencial para la vida en la Tierra.",
+        "nivel": "intermedio",
+        "categoria": "ciencia",
+        "palabrasClave": [
+            "biología",
+            "naturaleza",
+            "educación"
+        ]
+    },
+    {
+        "id": 1732369956010,
+        "titulo": "Velocidad Corta",
+        "texto": "Rapidez y precisión son las claves del éxito.",
+        "nivel": "principiante",
+        "categoria": "motivacion",
+        "palabrasClave": [
+            "corto",
+            "rápido",
+            "básico"
+        ]
+    }
 ]

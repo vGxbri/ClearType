@@ -13,6 +13,11 @@
       rel="stylesheet"
     />
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&family=Roboto+Mono:wght@300;400;500;600&family=Courier+Prime&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
@@ -532,6 +537,172 @@
           </div>
         </section>
 
+        <section id="view-custom-practice" class="view-section">
+          <h1
+            class="text-white text-5xl font-bold mb-2 flex items-center gap-3"
+          >
+            <i data-feather="target" class="text-[#FFEFB3]"></i>
+            Entrenamiento a Medida
+          </h1>
+          <p class="text-white/60 text-lg mb-8 ml-1">
+            Diseña ejercicios específicos para superar tus límites.
+          </p>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1">
+              <div class="glass rounded-3xl p-8 sticky top-8">
+                <h3
+                  class="text-white text-xl font-bold mb-6 flex items-center gap-2"
+                >
+                  <i data-feather="sliders" class="w-5 h-5 text-[#FFEFB3]"></i>
+                  Configuración
+                </h3>
+
+                <div class="space-y-6">
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                      >Objetivo</label
+                    >
+                    <select id="custom-type" class="w-full p-2">
+                      <option value="letters">Letras Específicas</option>
+                      <option value="numbers">Solo Números</option>
+                      <option value="symbols">Símbolos y Código</option>
+                      <option value="combinations">
+                        Combinaciones Difíciles
+                      </option>
+                    </select>
+                  </div>
+
+                  <div id="letters-input-group" class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                      >Letras a practicar</label
+                    >
+                    <input
+                      type="text"
+                      id="custom-letters"
+                      class="w-full px-4 py-3 bg-[#013E37] border border-[#FFEFB3] text-[#FFEFB3] rounded-xl focus:outline-none focus:shadow-[0_0_0_2px_rgba(255,239,179,0.3)] transition-all placeholder:text-[#FFEFB3]/30"
+                      placeholder="Ej: asdf ñ p q"
+                      value="asdf jklñ"
+                    />
+                    <p class="text-xs text-white/40 ml-1">
+                      Sepáralas o escríbelas juntas
+                    </p>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                      >Longitud (Palabras)</label
+                    >
+                    <input
+                      type="number"
+                      id="custom-length"
+                      class="w-full px-4 py-3 bg-[#013E37] border border-[#FFEFB3] text-[#FFEFB3] rounded-xl focus:outline-none focus:shadow-[0_0_0_2px_rgba(255,239,179,0.3)]"
+                      value="20"
+                      min="5"
+                      max="100"
+                    />
+                  </div>
+
+                  <button
+                    id="btn-generate-custom"
+                    class="w-full py-4 bg-[#FFEFB3] hover:bg-white text-[#013e37] font-bold text-lg rounded-xl transition-all hover:shadow-[0_0_20px_rgba(255,239,179,0.3)] hover:-translate-y-1 flex justify-center items-center gap-2 mt-4"
+                  >
+                    <i data-feather="play-circle"></i>
+                    Generar Práctica
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-6">
+              <div class="grid grid-cols-4 gap-4">
+                <div class="glass p-4 rounded-2xl text-center">
+                  <div
+                    class="text-2xl font-bold text-[#FFEFB3]"
+                    id="custom-wpm"
+                  >
+                    0
+                  </div>
+                  <div
+                    class="text-[10px] uppercase text-white/50 tracking-wider"
+                  >
+                    WPM
+                  </div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                  <div
+                    class="text-2xl font-bold text-[#FFEFB3]"
+                    id="custom-accuracy"
+                  >
+                    100%
+                  </div>
+                  <div
+                    class="text-[10px] uppercase text-white/50 tracking-wider"
+                  >
+                    Precisión
+                  </div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                  <div
+                    class="text-2xl font-bold text-[#FFEFB3]"
+                    id="custom-time"
+                  >
+                    0s
+                  </div>
+                  <div
+                    class="text-[10px] uppercase text-white/50 tracking-wider"
+                  >
+                    Tiempo
+                  </div>
+                </div>
+                <div class="glass p-4 rounded-2xl text-center">
+                  <div
+                    class="text-2xl font-bold text-[#FFEFB3]"
+                    id="custom-errors"
+                  >
+                    0
+                  </div>
+                  <div
+                    class="text-[10px] uppercase text-white/50 tracking-wider"
+                  >
+                    Errores
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="glass rounded-3xl p-8 min-h-[300px] flex flex-col justify-center relative"
+                id="custom-practice-area"
+              >
+                <div
+                  class="absolute top-4 right-4 opacity-50 hover:opacity-100 transition-opacity"
+                >
+                  <button
+                    id="btn-custom-restart"
+                    class="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20"
+                    title="Regenerar"
+                  >
+                    <i data-feather="rotate-cw" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
+                <div id="custom-preview" class="text-center">
+                  <div class="text-white/30 text-xl font-light italic">
+                    <i
+                      data-feather="arrow-left"
+                      class="inline w-5 h-5 mr-2"
+                    ></i>
+                    Configura y genera tu práctica para comenzar
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ===================================
                  VISTA: GESTIÓN DE TEXTOS (ADMIN)
                  =================================== -->
@@ -739,55 +910,134 @@
                  VISTA: ANÁLISIS DE ERRORES
                  =================================== -->
         <section id="view-analysis" class="view-section">
-          <h1
-            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
-          >
-            <i data-feather="activity"></i>
-            Análisis de Errores
-          </h1>
+          <div class="flex justify-between items-end mb-8">
+            <div>
+              <h1 class="text-white text-5xl font-bold flex items-center gap-3">
+                <i data-feather="activity" class="text-[#FFEFB3]"></i>
+                Análisis de Rendimiento
+              </h1>
+              <p class="text-white/60 mt-2 text-lg">
+                Visualización de datos biométricos de tu escritura
+              </p>
+            </div>
+          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- Teclas Problemáticas -->
-            <div class="glass rounded-3xl p-8">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="glass rounded-3xl p-6 lg:col-span-2 flex flex-col">
               <h3
-                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+                class="text-white text-lg font-bold mb-6 flex items-center gap-2 uppercase tracking-wider text-sm"
               >
-                <i data-feather="alert-circle"></i>
-                Teclas con Más Errores
+                <i data-feather="alert-octagon" class="text-red-400"></i>
+                Teclas Críticas
               </h3>
-              <div id="error-keys-container">
-                <p class="text-white/60 text-center">
-                  Realiza prácticas para ver estadísticas
-                </p>
+
+              <div
+                id="top-errors-visual"
+                class="flex-1 flex items-center justify-around gap-4"
+              >
+                <div class="text-white/40 text-sm italic">
+                  Falta información para mostrar estadísticas
+                </div>
               </div>
             </div>
 
-            <!-- Sugerencias -->
-            <div class="glass rounded-3xl p-8">
+            <div class="glass rounded-3xl p-6 flex flex-col">
               <h3
-                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+                class="text-white text-lg font-bold mb-6 flex items-center gap-2 uppercase tracking-wider text-sm"
               >
-                <i data-feather="message-circle"></i>
-                Sugerencias de Mejora
+                <i data-feather="columns" class="text-[#FFEFB3]"></i>
+                Balance de Manos
               </h3>
-              <div id="suggestions-container">
-                <p class="text-white/60 text-center">
-                  Completa más prácticas para recibir sugerencias personalizadas
+
+              <div
+                class="flex-1 flex flex-col justify-center gap-6"
+                id="hand-balance-container"
+              >
+                <div>
+                  <div class="flex justify-between text-sm mb-2">
+                    <span class="text-white font-medium">Mano Izquierda</span>
+                    <span class="text-red-300 font-mono" id="left-hand-pct"
+                      >0%</span
+                    >
+                  </div>
+                  <div
+                    class="w-full bg-black/30 rounded-full h-3 overflow-hidden"
+                  >
+                    <div
+                      id="left-hand-bar"
+                      class="bg-gradient-to-r from-red-500/50 to-red-500 h-full rounded-full transition-all duration-1000"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-sm mb-2">
+                    <span class="text-white font-medium">Mano Derecha</span>
+                    <span class="text-blue-300 font-mono" id="right-hand-pct"
+                      >0%</span
+                    >
+                  </div>
+                  <div
+                    class="w-full bg-black/30 rounded-full h-3 overflow-hidden"
+                  >
+                    <div
+                      id="right-hand-bar"
+                      class="bg-gradient-to-r from-blue-500/50 to-blue-500 h-full rounded-full transition-all duration-1000"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+
+                <p
+                  class="text-xs text-center text-white/40 mt-2"
+                  id="hand-verdict"
+                >
+                  Analizando patrones de escritura...
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Mapa de Calor -->
-          <div class="glass rounded-3xl p-8">
-            <h3
-              class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+          <div
+            class="glass rounded-3xl p-8 border border-[#FFEFB3]/20 relative overflow-hidden"
+          >
+            <div
+              class="absolute top-0 right-0 w-64 h-64 bg-[#FFEFB3] blur-[150px] opacity-5 pointer-events-none"
+            ></div>
+
+            <div class="flex justify-between items-center mb-8">
+              <h3
+                class="text-white text-lg font-bold flex items-center gap-2 uppercase tracking-wider text-sm"
+              >
+                <i data-feather="grid" class="text-[#FFEFB3]"></i>
+                Mapa de Calor
+              </h3>
+              <div
+                class="flex gap-4 text-xs font-medium text-white/60 bg-black/20 px-4 py-2 rounded-full"
+              >
+                <span class="flex items-center gap-2"
+                  ><span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                  Leve</span
+                >
+                <span class="flex items-center gap-2"
+                  ><span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                  Moderado</span
+                >
+                <span class="flex items-center gap-2"
+                  ><span class="w-2 h-2 rounded-full bg-red-500"></span>
+                  Crítico</span
+                >
+              </div>
+            </div>
+
+            <div
+              id="heatmap-container"
+              class="flex justify-center scale-100 origin-top transition-transform"
             >
-              <i data-feather="grid"></i>
-              Mapa de Calor de Errores
-            </h3>
-            <div id="heatmap-container" class="text-center">
-              <p class="text-white/60">Funcionalidad en desarrollo</p>
+              <p class="text-white/60">
+                Realiza prácticas para generar el mapa de calor
+              </p>
             </div>
           </div>
         </section>
@@ -796,140 +1046,240 @@
                  VISTA: CONFIGURACIÓN
                  =================================== -->
         <section id="view-settings" class="view-section">
-          <h1
-            class="text-white text-5xl font-bold mb-6 flex items-center gap-3"
-          >
-            <i data-feather="settings"></i>
-            Configuración
-          </h1>
-
-          <div class="glass rounded-3xl p-8 mb-6">
-            <div class="mb-12">
-              <h3
-                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
-              >
-                <i data-feather="monitor"></i>
-                Visualización
-              </h3>
-
-              <div
-                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
-              >
-                <span class="text-white/90 font-medium"
-                  >Tamaño de Fuente Grande</span
-                >
-                <label class="toggle-switch">
-                  <input type="checkbox" id="setting-large-font" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="mb-4">
-                <label class="block text-white font-semibold mb-2"
-                  >Espaciado de Línea</label
-                >
-                <select
-                  id="setting-line-height"
-                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
-                >
-                  <option value="1.5">Compacto</option>
-                  <option value="2" selected>Normal</option>
-                  <option value="2.5">Amplio</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mb-12">
-              <h3
-                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
-              >
-                <i data-feather="volume-2"></i>
-                Sonido y Efectos
-              </h3>
-
-              <div
-                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
-              >
-                <span class="text-white/90 font-medium">Sonidos de Teclas</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="setting-sounds" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div
-                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
-              >
-                <span class="text-white/90 font-medium">Efectos de Error</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="setting-error-effects" checked />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-            </div>
-
+          <div class="flex justify-between items-end mb-8">
             <div>
-              <h3
-                class="text-white text-xl font-semibold mb-6 flex items-center gap-2"
+              <h1 class="text-white text-5xl font-bold flex items-center gap-3">
+                <i data-feather="settings" class="text-[#FFEFB3]"></i>
+                Ajustes
+              </h1>
+              <p class="text-white/60 mt-2 text-lg">
+                Personaliza tu experiencia de escritura.
+              </p>
+            </div>
+            <div class="flex gap-3">
+              <button
+                id="btn-save-settings"
+                class="px-6 py-3 bg-[#FFEFB3] hover:bg-white text-[#013e37] font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(255,239,179,0.2)] hover:shadow-[0_0_25px_rgba(255,239,179,0.4)] flex items-center gap-2"
               >
-                <i data-feather="clock"></i>
-                Práctica
-              </h3>
-
-              <div
-                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
-              >
-                <span class="text-white/90 font-medium">Límite de Tiempo</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="setting-time-limit" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="mb-4 hidden" id="time-limit-input">
-                <label class="block text-white font-semibold mb-2"
-                  >Tiempo Límite (minutos)</label
-                >
-                <input
-                  type="number"
-                  id="setting-time-value"
-                  class="w-full px-4 py-3 bg-white/15 border border-white/25 rounded-xl text-white focus:outline-none focus:border-[#FFEFB3] focus:ring-2 focus:ring-[#FFEFB3]/20"
-                  value="5"
-                  min="1"
-                  max="30"
-                />
-              </div>
-
-              <div
-                class="flex justify-between items-center p-4 bg-black/10 rounded-xl mb-3"
-              >
-                <span class="text-white/90 font-medium"
-                  >Mostrar Carácter Actual</span
-                >
-                <label class="toggle-switch">
-                  <input type="checkbox" id="setting-show-current" checked />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
+                <i data-feather="save" class="w-4 h-4"></i> Guardar Cambios
+              </button>
             </div>
           </div>
 
-          <div class="flex gap-4 flex-wrap">
-            <button
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:-translate-y-1 hover:shadow-lg"
-              style="background: #ffefb3; color: #013e37"
-              id="btn-save-settings"
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div
+              class="glass rounded-3xl p-8 md:col-span-2 flex flex-col justify-center"
             >
-              <i data-feather="save"></i>
-              Guardar Configuración
-            </button>
-            <button
-              class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold transition-all hover:bg-white/30 hover:-translate-y-1"
-              id="btn-reset-settings"
-            >
-              <i data-feather="rotate-ccw"></i>
-              Restaurar Predeterminados
-            </button>
+              <h3
+                class="text-white text-lg font-bold mb-6 flex items-center gap-2 uppercase tracking-wider text-sm border-b border-white/10 pb-4"
+              >
+                <i data-feather="monitor" class="text-blue-400"></i>
+                Visualización
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-3">
+                  <label
+                    class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                    >Tipografía</label
+                  >
+                  <select id="setting-font-family" class="w-full p-2">
+                    <option value="'JetBrains Mono', monospace">
+                      JetBrains Mono
+                    </option>
+                    <option value="'Fira Code', monospace">Fira Code</option>
+                    <option value="'Courier New', monospace">
+                      Courier New
+                    </option>
+                    <option value="'Roboto Mono', monospace">
+                      Roboto Mono
+                    </option>
+                    <option value="monospace">System Monospace</option>
+                  </select>
+                </div>
+
+                <div class="space-y-3">
+                  <label
+                    class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                    >Estilo de Cursor</label
+                  >
+                  <select id="setting-caret-style" class="w-full p-2">
+                    <option value="line">｜ Línea Vertical</option>
+                    <option value="block">█ Bloque</option>
+                    <option value="underscore">_ Subguión</option>
+                    <option value="outline">□ Contorno</option>
+                  </select>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <label
+                      class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                      >Tamaño de Texto</label
+                    >
+                    <span
+                      id="font-size-value"
+                      class="text-xs text-white font-mono"
+                      >3rem</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="setting-font-size"
+                    min="1.5"
+                    max="6"
+                    step="0.5"
+                    value="3"
+                    class="w-full h-2 bg-black/30 rounded-lg appearance-none cursor-pointer accent-[#FFEFB3]"
+                  />
+                </div>
+
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <label
+                      class="text-xs font-bold text-[#FFEFB3] uppercase tracking-wider ml-1"
+                      >Espaciado de Línea</label
+                    >
+                    <span
+                      id="line-height-value"
+                      class="text-xs text-white font-mono"
+                      >1.5</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="setting-line-height"
+                    min="1"
+                    max="3"
+                    step="0.2"
+                    value="1.6"
+                    class="w-full h-2 bg-black/30 rounded-lg appearance-none cursor-pointer accent-[#FFEFB3]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8 xl:col-span-1">
+              <h3
+                class="text-white text-lg font-bold mb-6 flex items-center gap-2 uppercase tracking-wider text-sm border-b border-white/10 pb-4"
+              >
+                <i data-feather="cpu" class="text-green-400"></i>
+                Comportamiento
+              </h3>
+
+              <div class="space-y-6">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Muerte Súbita
+                    </div>
+                    <div class="text-white/40 text-xs">
+                      Termina al primer error
+                    </div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-sudden-death" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Bloquear en Error
+                    </div>
+                    <div class="text-white/40 text-xs">Obliga a corregir</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-stop-on-error" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Temporizador
+                    </div>
+                    <div class="text-white/40 text-xs">
+                      Límite de tiempo fijo
+                    </div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-time-limit" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div id="time-limit-input" class="hidden animate-fadeIn">
+                  <input
+                    type="number"
+                    id="setting-time-value"
+                    class="w-full px-4 py-2 bg-[#013E37] border border-[#FFEFB3] text-[#FFEFB3] rounded-lg text-sm"
+                    placeholder="Minutos"
+                    value="1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8 md:col-span-2 xl:col-span-3">
+              <h3
+                class="text-white text-lg font-bold mb-6 flex items-center gap-2 uppercase tracking-wider text-sm border-b border-white/10 pb-4"
+              >
+                <i data-feather="volume-2" class="text-purple-400"></i>
+                Sonido y Efectos Visuales
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div
+                  class="flex justify-between items-center p-4 rounded-2xl bg-white/5 border border-white/5"
+                >
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Sonidos Mecánicos
+                    </div>
+                    <div class="text-white/40 text-xs">
+                      Click-clack al escribir
+                    </div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-sounds" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div
+                  class="flex justify-between items-center p-4 rounded-2xl bg-white/5 border border-white/5"
+                >
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Efectos de Error
+                    </div>
+                    <div class="text-white/40 text-xs">Flash visual</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-error-effects" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div
+                  class="flex justify-between items-center p-4 rounded-2xl bg-white/5 border border-white/5"
+                >
+                  <div>
+                    <div class="text-white font-medium text-sm">
+                      Resaltar Actual
+                    </div>
+                    <div class="text-white/40 text-xs">Cursor dinámico</div>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-show-current" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -1179,6 +1529,11 @@
         </div>
       </div>
     </section>
+
+    <div
+      id="flash-effect-overlay"
+      class="fixed inset-0 pointer-events-none z-[9999] opacity-0"
+    ></div>
 
     <!-- Toast Container -->
     <div id="toast-container"></div>

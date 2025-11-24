@@ -99,18 +99,173 @@
         "tipo": "normal"
     },
     {
-        "id": 1763989629162,
+        "id": 1764004762946,
         "userId": "user_69244d6067839",
-        "fecha": "2025-11-24 14:07:09",
+        "fecha": "2025-11-24 18:19:22",
         "textoId": 1732369956010,
         "textoTitulo": "Velocidad Corta",
-        "wpm": 75,
+        "wpm": 71,
         "precision": 95.6,
         "tiempo": 6,
         "errores": 2,
         "teclasErrores": {
-            "r": 34,
-            ".": 1
+            "r": 1,
+            "e": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008717301,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:25:17",
+        "textoId": 1732369956004,
+        "textoTitulo": "Literatura Clásica",
+        "wpm": 25,
+        "precision": 78.6,
+        "tiempo": 7,
+        "errores": 3,
+        "teclasErrores": {
+            "E": 1,
+            "n": 1,
+            " ": 2
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008725573,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:25:25",
+        "textoId": 1732369956004,
+        "textoTitulo": "Literatura Clásica",
+        "wpm": 167,
+        "precision": 100,
+        "tiempo": 2,
+        "errores": 0,
+        "teclasErrores": {
+            "a": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008728366,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:25:28",
+        "textoId": 1732369956005,
+        "textoTitulo": "Comunicación Empresarial",
+        "wpm": 0,
+        "precision": 100,
+        "tiempo": 0,
+        "errores": 0,
+        "teclasErrores": {
+            "E": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008729519,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:25:29",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 0,
+        "precision": 100,
+        "tiempo": 0,
+        "errores": 0,
+        "teclasErrores": {
+            "R": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008730279,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:25:30",
+        "textoId": 1732369956007,
+        "textoTitulo": "Práctica de Números",
+        "wpm": 0,
+        "precision": 100,
+        "tiempo": 0,
+        "errores": 0,
+        "teclasErrores": {
+            "E": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764008942690,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:29:02",
+        "textoId": 1732369956002,
+        "textoTitulo": "Programación Web Moderna",
+        "wpm": 147,
+        "precision": 100,
+        "tiempo": 0,
+        "errores": 0,
+        "teclasErrores": {
+            "S": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764009451438,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:37:31",
+        "textoId": 1732369956006,
+        "textoTitulo": "Programación Avanzada",
+        "wpm": 58,
+        "precision": 95.8,
+        "tiempo": 35,
+        "errores": 11,
+        "teclasErrores": {
+            "ó": 1,
+            "n": 1,
+            " ": 3,
+            "e": 3,
+            "u": 1,
+            "s": 1,
+            "é": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764009460933,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:37:40",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 72,
+        "precision": 93.3,
+        "tiempo": 6,
+        "errores": 3,
+        "teclasErrores": {
+            "s": 1,
+            "i": 1,
+            "c": 1
+        },
+        "tipo": "normal"
+    },
+    {
+        "id": 1764010133607,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 19:48:53",
+        "textoId": 1732369956007,
+        "textoTitulo": "Práctica de Números",
+        "wpm": 60,
+        "precision": 92.6,
+        "tiempo": 29,
+        "errores": 15,
+        "teclasErrores": {
+            "0": 1,
+            "E": 1,
+            "l": 2,
+            " ": 1,
+            "a": 1,
+            "ñ": 1,
+            "m": 1,
+            "i": 2,
+            "g": 1,
+            ",": 1,
+            ".": 3
         },
         "tipo": "normal"
     }
