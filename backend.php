@@ -1,7 +1,7 @@
 <?php
 /**
- * Backend PHP Expandido para TypeMaster Pro
- * Maneja operaciones CRUD de textos y gestión de resultados
+ * Backend PHP Expandido para ClearType
+ * Maneja operaciones CRUD de textos, gestión de resultados y autenticación de usuarios
  */
 
 // Configuración de cabeceras
@@ -13,6 +13,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Archivos de datos
 $archivoTextos = 'data.json';
 $archivoResultados = 'resultados.json';
+$archivoUsuarios = 'users.json';
 
 // Funciones auxiliares
 function leerDatos($archivo) {
@@ -57,7 +58,82 @@ $accion = isset($_POST['action']) ? $_POST['action'] : '';
 switch ($accion) {
     
     // ============================================
-    // OPERACIONES DE TEXTOS
+    // AUTENTICACIÓN
+    // ============================================
+    
+    case 'register':
+        $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        
+        if (empty($username) || empty($password)) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario y contraseña son obligatorios']);
+            break;
+        }
+        
+        $usuarios = leerDatos($archivoUsuarios);
+        
+        // Verificar si existe
+        foreach ($usuarios as $user) {
+            if ($user['username'] === $username) {
+                echo json_encode(['status' => 'error', 'message' => 'El nombre de usuario ya existe']);
+                break 2;
+            }
+        }
+        
+        // Crear usuario
+        $nuevoUsuario = [
+            'id' => uniqid('user_'),
+            'username' => $username,
+            'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        $usuarios[] = $nuevoUsuario;
+        
+        if (guardarDatos($archivoUsuarios, $usuarios)) {
+            echo json_encode([
+                'status' => 'success', 
+                'message' => 'Usuario registrado exitosamente',
+                'user' => [
+                    'id' => $nuevoUsuario['id'],
+                    'username' => $nuevoUsuario['username']
+                ]
+            ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al guardar usuario']);
+        }
+        break;
+        
+    case 'login':
+        $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        
+        $usuarios = leerDatos($archivoUsuarios);
+        $usuarioEncontrado = null;
+        
+        foreach ($usuarios as $user) {
+            if ($user['username'] === $username) {
+                $usuarioEncontrado = $user;
+                break;
+            }
+        }
+        
+        if ($usuarioEncontrado && password_verify($password, $usuarioEncontrado['password_hash'])) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login exitoso',
+                'user' => [
+                    'id' => $usuarioEncontrado['id'],
+                    'username' => $usuarioEncontrado['username']
+                ]
+            ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Credenciales inválidas']);
+        }
+        break;
+
+    // ============================================
+    // OPERACIONES DE TEXTOS (Públicos para todos)
     // ============================================
     
     case 'read':
@@ -275,12 +351,20 @@ switch ($accion) {
         break;
     
     // ============================================
-    // OPERACIONES DE RESULTADOS
+    // OPERACIONES DE RESULTADOS (Privados por Usuario)
     // ============================================
     
     case 'save_result':
+        $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+        
+        if (empty($userId)) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no identificado']);
+            break;
+        }
+
         $resultado = [
             'id' => round(microtime(true) * 1000),
+            'userId' => $userId,
             'fecha' => date('Y-m-d H:i:s'),
             'textoId' => isset($_POST['textoId']) ? intval($_POST['textoId']) : 0,
             'textoTitulo' => isset($_POST['textoTitulo']) ? trim($_POST['textoTitulo']) : '',
@@ -288,16 +372,15 @@ switch ($accion) {
             'precision' => isset($_POST['precision']) ? floatval($_POST['precision']) : 0,
             'tiempo' => isset($_POST['tiempo']) ? floatval($_POST['tiempo']) : 0,
             'errores' => isset($_POST['errores']) ? intval($_POST['errores']) : 0,
+            'teclasErrores' => isset($_POST['teclasErrores']) ? json_decode($_POST['teclasErrores'], true) : [],
             'tipo' => isset($_POST['tipo']) ? trim($_POST['tipo']) : 'normal' // normal o personalizado
         ];
         
         $resultados = leerDatos($archivoResultados);
         $resultados[] = $resultado;
         
-        // Limitar a las últimas 100 prácticas para no saturar el archivo
-        if (count($resultados) > 100) {
-            $resultados = array_slice($resultados, -100);
-        }
+        // Limpieza opcional: mantener solo los últimos X resultados globales o por usuario
+        // Por simplicidad, guardamos todo por ahora
         
         if (guardarDatos($archivoResultados, $resultados)) {
             echo json_encode([
@@ -314,29 +397,53 @@ switch ($accion) {
         break;
     
     case 'get_results':
+        $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
         $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 0;
+        
+        if (empty($userId)) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no identificado']);
+            break;
+        }
+
         $resultados = leerDatos($archivoResultados);
         
+        // Filtrar por usuario
+        $resultadosUsuario = array_filter($resultados, function($r) use ($userId) {
+            return isset($r['userId']) && $r['userId'] === $userId;
+        });
+        
         // Ordenar por fecha descendente (más recientes primero)
-        usort($resultados, function($a, $b) {
+        usort($resultadosUsuario, function($a, $b) {
             return strcmp($b['fecha'], $a['fecha']);
         });
         
         if ($limit > 0) {
-            $resultados = array_slice($resultados, 0, $limit);
+            $resultadosUsuario = array_slice($resultadosUsuario, 0, $limit);
         }
         
         echo json_encode([
             'status' => 'success',
-            'data' => $resultados,
-            'total' => count($resultados)
+            'data' => array_values($resultadosUsuario),
+            'total' => count($resultadosUsuario)
         ]);
         break;
     
     case 'get_stats':
+        $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+        
+        if (empty($userId)) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no identificado']);
+            break;
+        }
+
         $resultados = leerDatos($archivoResultados);
         
-        if (count($resultados) === 0) {
+        // Filtrar por usuario
+        $resultadosUsuario = array_filter($resultados, function($r) use ($userId) {
+            return isset($r['userId']) && $r['userId'] === $userId;
+        });
+        
+        if (count($resultadosUsuario) === 0) {
             echo json_encode([
                 'status' => 'success',
                 'data' => [
@@ -350,13 +457,13 @@ switch ($accion) {
             break;
         }
         
-        $totalPracticas = count($resultados);
+        $totalPracticas = count($resultadosUsuario);
         $sumaWPM = 0;
         $sumaPrecision = 0;
         $mejorWPM = 0;
         $mejorPrecision = 0;
         
-        foreach ($resultados as $resultado) {
+        foreach ($resultadosUsuario as $resultado) {
             $sumaWPM += $resultado['wpm'];
             $sumaPrecision += $resultado['precision'];
             
@@ -369,6 +476,13 @@ switch ($accion) {
             }
         }
         
+        // Re-indexar array para asegurar que [0] funciona si se usa
+        $resultadosUsuario = array_values($resultadosUsuario);
+        // Ordenar para obtener última práctica correcta
+        usort($resultadosUsuario, function($a, $b) {
+            return strcmp($b['fecha'], $a['fecha']);
+        });
+
         echo json_encode([
             'status' => 'success',
             'data' => [
@@ -377,8 +491,8 @@ switch ($accion) {
                 'promedioPrecision' => round($sumaPrecision / $totalPracticas, 1),
                 'mejorWPM' => $mejorWPM,
                 'mejorPrecision' => $mejorPrecision,
-                'ultimaPractica' => $resultados[0] ?? null,
-                'mejorResultado' => array_reduce($resultados, function($mejor, $actual) {
+                'ultimaPractica' => $resultadosUsuario[0] ?? null,
+                'mejorResultado' => array_reduce($resultadosUsuario, function($mejor, $actual) {
                     if (!$mejor || $actual['wpm'] > $mejor['wpm']) {
                         return $actual;
                     }
@@ -389,7 +503,21 @@ switch ($accion) {
         break;
     
     case 'clear_results':
-        if (guardarDatos($archivoResultados, [])) {
+        $userId = isset($_POST['userId']) ? $_POST['userId'] : '';
+        
+        if (empty($userId)) {
+            echo json_encode(['status' => 'error', 'message' => 'Usuario no identificado']);
+            break;
+        }
+
+        $resultados = leerDatos($archivoResultados);
+        
+        // Mantener solo resultados que NO son del usuario
+        $nuevosResultados = array_filter($resultados, function($r) use ($userId) {
+            return !isset($r['userId']) || $r['userId'] !== $userId;
+        });
+        
+        if (guardarDatos($archivoResultados, array_values($nuevosResultados))) {
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Historial borrado'

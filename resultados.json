@@ -9,5 +9,109 @@
         "tiempo": 22,
         "errores": 0,
         "tipo": "normal"
+    },
+    {
+        "id": 1763912034940,
+        "fecha": "2025-11-23 16:33:54",
+        "textoId": 1732369956003,
+        "textoTitulo": "Frase Motivacional",
+        "wpm": 82,
+        "precision": 100,
+        "tiempo": 13,
+        "errores": 0,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763912077319,
+        "fecha": "2025-11-23 16:34:37",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 44,
+        "precision": 100,
+        "tiempo": 10,
+        "errores": 0,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763918968157,
+        "fecha": "2025-11-23 18:29:28",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 82,
+        "precision": 100,
+        "tiempo": 5,
+        "errores": 0,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763918974342,
+        "fecha": "2025-11-23 18:29:34",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 94,
+        "precision": 24.4,
+        "tiempo": 1,
+        "errores": 34,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763919273449,
+        "fecha": "2025-11-23 18:34:33",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 67,
+        "precision": 86.7,
+        "tiempo": 7,
+        "errores": 6,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763919720439,
+        "fecha": "2025-11-23 18:42:00",
+        "textoId": 1732369956006,
+        "textoTitulo": "Programación Avanzada",
+        "wpm": 58,
+        "precision": 94.3,
+        "tiempo": 36,
+        "errores": 15,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763920522322,
+        "fecha": "2025-11-23 18:55:22",
+        "textoId": 1732369956001,
+        "textoTitulo": "Pangrama Clásico Español",
+        "wpm": 50,
+        "precision": 95.5,
+        "tiempo": 22,
+        "errores": 5,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763920531163,
+        "fecha": "2025-11-23 18:55:31",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 73,
+        "precision": 91.1,
+        "tiempo": 6,
+        "errores": 4,
+        "tipo": "normal"
+    },
+    {
+        "id": 1763989629162,
+        "userId": "user_69244d6067839",
+        "fecha": "2025-11-24 14:07:09",
+        "textoId": 1732369956010,
+        "textoTitulo": "Velocidad Corta",
+        "wpm": 75,
+        "precision": 95.6,
+        "tiempo": 6,
+        "errores": 2,
+        "teclasErrores": {
+            "r": 34,
+            ".": 1
+        },
+        "tipo": "normal"
     }
 ]

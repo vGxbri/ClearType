@@ -64,14 +64,6 @@
     "palabrasClave": ["biología", "naturaleza", "educación"]
   },
   {
-    "id": 1732369956009,
-    "titulo": "Símbolos y Puntuación",
-    "texto": "¿Sabías que los símbolos como @, #, $, %, &, *, (, ), [, ], {, }, <, >, /, \\, |, ~, `, ', \", :, ;, ., ,, ?, ! son fundamentales en programación? ¡Practiquemos su uso correctamente!",
-    "nivel": "experto",
-    "categoria": "simbolos",
-    "palabrasClave": ["símbolos", "puntuación", "especiales"]
-  },
-  {
     "id": 1732369956010,
     "titulo": "Velocidad Corta",
     "texto": "Rapidez y precisión son las claves del éxito.",
